@@ -9,3 +9,6 @@ composer.lock export-ignore
 # Tests
 /tests/ export-ignore
 phpunit.xml export-ignore
+
+# Misc.
+.phpstorm.meta.php export-ignore
