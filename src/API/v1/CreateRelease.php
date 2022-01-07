@@ -72,6 +72,7 @@ class CreateRelease implements RestRoute
                     ],
                     'requirements' => [
                         'required'          => false,
+                        'default'           => null,
                         'validate_callback' => function ($param, $request, $key) {
                             // Empty values are allowed.
                             if (is_null($param) || (is_array($param) && empty($param))) {
@@ -100,7 +101,11 @@ class CreateRelease implements RestRoute
                             return true;
                         },
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return array_intersect_key((array) $param, array_flip(edd_sl_get_platforms()));
+                            $value = is_array($param) && ! empty($param)
+                                ? array_intersect_key((array) $param, edd_sl_get_platforms())
+                                : null;
+
+                            return $value ?: null;
                         }
                     ]
                 ]

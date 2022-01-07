@@ -9,6 +9,7 @@
 
 namespace EddSlReleases\Tests\API;
 
+use EddSlReleases\Database\ReleasesTable;
 use EddSlReleases\Services\ReleaseFileProcessor;
 use EddSlReleases\API\RestRoute;
 use EddSlReleases\Tests\TestCase;
@@ -44,6 +45,14 @@ class ApiTestCase extends TestCase
         parent::set_up();
 
         $this->product = $this->createProduct();
+    }
+
+    public function tear_down()
+    {
+        parent::tear_down();
+
+        // Truncate releases.
+        eddSlReleases(ReleasesTable::class)->truncate();
     }
 
     protected function makeRestRequest(

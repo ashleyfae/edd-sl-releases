@@ -9,6 +9,8 @@
 
 namespace EddSlReleases\Tests\API;
 
+use EddSlReleases\Repositories\ReleaseRepository;
+
 /**
  * @coversDefaultClass \EddSlReleases\API\v1\CreateRelease
  */
@@ -81,6 +83,14 @@ class CreateReleaseTest extends ApiTestCase
         ]);
 
         $this->assertEquals(201, $response->get_status());
+
+        $release = eddSlReleases(ReleaseRepository::class)->getLatestStableRelease($this->product->ID);
+
+        $this->assertSame('1.0', $release->version);
+        $this->assertSame('https://mysite.com/file.zip', $release->file_url);
+        $this->assertNull($release->changelog);
+        $this->assertSame(['php' => '7.4'], $release->requirements);
+        $this->assertFalse($release->pre_release);
     }
 
 }
