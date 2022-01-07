@@ -8,6 +8,8 @@
  * Author URI: https://github.com/ashleyfae
  * Text Domain: edd-sl-releases
  *
+ * GitHub Plugin URI: ashleyfae/edd-sl-releases
+ *
  * @package   edd-sl-releases
  * @copyright Copyright (c) 2021, Ashley Gibson
  * @license   GPL2+
@@ -35,7 +37,7 @@ require 'vendor/autoload.php';
  *
  * @return Plugin|mixed
  */
-function eddSlReleases(?string $abstract = null)
+function eddSlReleases($abstract = null)
 {
     static $instance = null;
 

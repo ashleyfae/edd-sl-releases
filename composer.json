@@ -1,25 +1,26 @@
 {
-    "name": "ashleyfae/edd-sl-releases",
-    "description": "Brings historical releases to EDD Software Licensing.",
-    "type": "wordpress-plugin",
-    "license": "GPL-2.0-or-later",
-    "autoload": {
-        "psr-4": {
-            "EddSlReleases\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "EddSlReleases\\Tests\\": "tests/"
-        }
-    },
-    "minimum-stability": "dev",
-    "require": {
-        "php": ">=7.4"
-    },
-    "require-dev": {
-        "mockery/mockery": "^1.4.4",
-        "phpunit/phpunit": "^9.0",
-        "yoast/phpunit-polyfills": "1.x-dev"
+  "name": "ashleyfae/edd-sl-releases",
+  "description": "Brings historical releases to EDD Software Licensing.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "autoload": {
+    "psr-4": {
+      "EddSlReleases\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "EddSlReleases\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.4.4",
+    "phpunit/phpunit": "^9.0",
+    "yoast/phpunit-polyfills": "1.x-dev"
+  }
 }

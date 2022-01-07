@@ -16,7 +16,7 @@ class DatabaseServiceProvider implements ServiceProvider
 
     public function register(): void
     {
-        eddSlReleases()->make(DatabaseServiceProvider::class);
+
     }
 
     public function boot(): void
