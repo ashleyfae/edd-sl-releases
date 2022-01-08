@@ -12,9 +12,12 @@ namespace EddSlReleases\API\v1;
 use EddSlReleases\Services\ReleaseFileProcessor;
 use EddSlReleases\API\RestRoute;
 use EddSlReleases\Repositories\ReleaseRepository;
+use EddSlReleases\Traits\ChecksPermissions;
 
 class CreateRelease implements RestRoute
 {
+    use ChecksPermissions;
+
     protected ReleaseRepository $releaseRepository;
     protected ReleaseFileProcessor $processReleaseFile;
 
@@ -28,7 +31,7 @@ class CreateRelease implements RestRoute
     {
         register_rest_route(
             self::NAMESPACE.'/v1',
-            'releases',
+            'products/(?P<product_id>\d+)/releases',
             [
                 'methods'             => \WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'handle'],
@@ -111,19 +114,6 @@ class CreateRelease implements RestRoute
                 ]
             ]
         );
-    }
-
-    public function permissionCheck()
-    {
-        if (! current_user_can('edit_products')) {
-            return new \WP_Error(
-                'rest_forbidden',
-                __('You do not have permission to perform this action.', 'edd-sl-releases'),
-                ['status' => is_user_logged_in() ? 403 : 401]
-            );
-        }
-
-        return true;
     }
 
     public function handle(\WP_REST_Request $request): \WP_REST_Response

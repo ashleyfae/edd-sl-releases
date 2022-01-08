@@ -18,7 +18,7 @@
 use EddSlReleases\Plugin;
 
 if (
-    version_compare(phpversion(), '7.4', '<') ||
+    version_compare(phpversion(), '8.0', '<') ||
     version_compare(get_bloginfo('version'), '5.8', '<')
 ) {
     return;

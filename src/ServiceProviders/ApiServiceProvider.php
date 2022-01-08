@@ -9,12 +9,13 @@
 
 namespace EddSlReleases\ServiceProviders;
 
-use EddSlReleases\API\v1\CreateRelease;
+use EddSlReleases\API\v1;
 
 class ApiServiceProvider implements ServiceProvider
 {
     private array $routes = [
-        CreateRelease::class,
+        v1\CreateRelease::class,
+        v1\ListReleases::class,
     ];
 
     public function register(): void

@@ -16,17 +16,21 @@ use EddSlReleases\Repositories\ReleaseRepository;
  */
 class CreateReleaseTest extends ApiTestCase
 {
+    private function getApiEndpoint(): string
+    {
+        return 'v1/products/'.$this->product->ID.'/releases';
+    }
+
     public function test_request_with_empty_payload_throws_400()
     {
-        $response = $this->makeRestRequest('v1/releases', []);
+        $response = $this->makeRestRequest($this->getApiEndpoint(), []);
 
         $this->assertEquals(400, $response->get_status());
     }
 
     public function test_invalid_requirement_throws_400()
     {
-        $response = $this->makeRestRequest('v1/releases', [
-            'product_id'   => $this->product->ID,
+        $response = $this->makeRestRequest($this->getApiEndpoint(), [
             'version'      => '1.0',
             'file_url'     => 'https://sample-url.com',
             'file_name'    => 'sample-file.zip',
@@ -47,8 +51,7 @@ class CreateReleaseTest extends ApiTestCase
      */
     public function test_unauthenticated_request_returns_401()
     {
-        $response = $this->makeRestRequest('v1/releases', [
-            'product_id'   => $this->product->ID,
+        $response = $this->makeRestRequest($this->getApiEndpoint(), [
             'version'      => '1.0',
             'file_url'     => 'https://sample-url.com',
             'file_name'    => 'sample-file.zip',
@@ -72,8 +75,7 @@ class CreateReleaseTest extends ApiTestCase
             ->once()
             ->andReturn('https://mysite.com/file.zip');
 
-        $response = $this->makeRestRequest('v1/releases', [
-            'product_id'   => $this->product->ID,
+        $response = $this->makeRestRequest($this->getApiEndpoint(), [
             'version'      => '1.0',
             'file_url'     => 'https://sample-url.com',
             'file_name'    => 'sample-file.zip',

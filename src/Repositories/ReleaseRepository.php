@@ -136,4 +136,35 @@ class ReleaseRepository
         return new Release($row);
     }
 
+    /**
+     * Lists the releases for a given product.
+     *
+     * @param  int  $productId
+     * @param  bool  $preReleases
+     * @param  int  $offset
+     *
+     * @return Release[]
+     */
+    public function listForProduct(int $productId, bool $preReleases = false, int $offset = 0): array
+    {
+        $results = $this->wpdb->get_results($this->wpdb->prepare(
+            "SELECT * FROM {$this->releasesTable->tableName}
+WHERE product_id = %d AND pre_release = %d
+ORDER BY created_at DESC
+LIMIT {$offset}, 10",
+            $productId,
+            (int) $preReleases
+        ), ARRAY_A);
+
+        if (empty($results)) {
+            return [];
+        }
+
+        foreach ($results as $key => $row) {
+            $results[$key] = new Release($row);
+        }
+
+        return $results;
+    }
+
 }
