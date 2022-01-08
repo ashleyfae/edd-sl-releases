@@ -24,6 +24,8 @@ class ApplicationServiceProvider implements ServiceProvider
     {
         Hooks::addFilter('edd_sl_download_version', ReleaseMapper::class, 'mapVersion', 10, 2);
         Hooks::addFilter('edd_sl_download_changelog', ReleaseMapper::class, 'mapChangelog', 10, 2);
-        Hooks::addFilter('get_download_metadata', ReleaseMapper::class, 'mapRequirements', 10, 5);
+        Hooks::addFilter('get_post_metadata', ReleaseMapper::class, 'mapRequirements', 10, 5);
+
+        Hooks::addFilter('get_post_metadata', ReleaseMapper::class, 'mapBetaData', 10, 5);
     }
 }

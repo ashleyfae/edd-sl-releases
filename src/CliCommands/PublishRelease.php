@@ -9,24 +9,16 @@
 
 namespace EddSlReleases\CliCommands;
 
-use EddSlReleases\Repositories\ReleaseRepository;
+use EddSlReleases\Actions\CreateAndPublishRelease;
 use EddSlReleases\Services\GitHubApi;
-use EddSlReleases\Services\ReleaseFileProcessor;
 
 class PublishRelease implements CliCommand
 {
-    protected GitHubApi $gitHubApi;
-    protected ReleaseFileProcessor $processor;
-    protected ReleaseRepository $releaseRepository;
 
     public function __construct(
-        GitHubApi $gitHubApi,
-        ReleaseFileProcessor $processor,
-        ReleaseRepository $releaseRepository
+        protected GitHubApi $gitHubApi,
+        protected CreateAndPublishRelease $releasePublisher
     ) {
-        $this->gitHubApi         = $gitHubApi;
-        $this->processor         = $processor;
-        $this->releaseRepository = $releaseRepository;
     }
 
     public static function commandName(): string
@@ -79,15 +71,11 @@ class PublishRelease implements CliCommand
 
             \WP_CLI::confirm(__('Is this asset correct?', 'edd-sl-releases'));
 
-            $localUrl = $this->processor->execute($asset['url'], $asset['name']);
-
-            /* Translators: %s URL to file */
-            \WP_CLI::line(sprintf(__('Asset downloaded locally to: %s', 'edd-sl-releases'), $localUrl));
-
             $releaseArgs = [
                 'product_id'   => $product->ID,
                 'version'      => sanitize_text_field($release['tag_name']), // could also use 'name'
-                'file_url'     => $localUrl,
+                'file_url'     => $asset['url'],
+                'file_name'    => $asset['name'],
                 'changelog'    => wp_kses_post($release['body']),
                 'requirements' => null, // @todo
                 'pre_release'  => ! empty($asset['prerelease']) ? 1 : 0,
@@ -97,7 +85,7 @@ class PublishRelease implements CliCommand
 
             \WP_CLI::line(__('Do these arguments look correct?', 'edd-sl-releases'));
 
-            $release = $this->releaseRepository->insert($releaseArgs);
+            $release = $this->releasePublisher->execute($releaseArgs);
 
             /* Translators: %d ID of the release */
             \WP_CLI::success(sprintf(__('Successfully created release #%d.', 'edd-sl-releases'), $release->id));

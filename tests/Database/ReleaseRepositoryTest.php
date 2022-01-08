@@ -39,9 +39,10 @@ class ReleaseRepositoryTest extends TestCase
     public function test_insert_release_adds_release_to_db()
     {
         $release = $this->releaseRepository->insert([
-            'product_id' => $this->product->ID,
-            'version'    => '1.5',
-            'file_url'   => 'https://sampleurl.com',
+            'product_id'         => $this->product->ID,
+            'version'            => '1.5',
+            'file_attachment_id' => 1,
+            'file_path'          => 'https://sampleurl.com',
         ]);
 
         $this->assertInstanceOf(Release::class, $release);

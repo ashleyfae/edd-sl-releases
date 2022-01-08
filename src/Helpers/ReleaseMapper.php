@@ -52,4 +52,43 @@ class ReleaseMapper
         }
     }
 
+    public function mapBetaData($value, $objectId, $metaKey, bool $single, ?string $metaType = null)
+    {
+        $betaKeys = [
+            '_edd_sl_beta_enabled',
+            '_edd_sl_beta_version',
+            '_edd_sl_beta_changelog',
+            '_edd_sl_beta_upgrade_file_key',
+        ];
+
+        if (! in_array($metaKey, $betaKeys, true)) {
+            return $value;
+        }
+
+        // If we have no beta versions, bail.
+        try {
+            $latestPreRelease = $this->releaseRepository->getLatestPreRelease((int) $objectId);
+        } catch (ModelNotFoundException $e) {
+            return $value;
+        }
+
+        try {
+            $latestStableRelease = $this->releaseRepository->getLatestStableRelease((int) $objectId);
+
+            // If the stable is higher than the beta, bail.
+            if (version_compare($latestStableRelease->version, $latestPreRelease->version, '>')) {
+                return $value;
+            }
+        } catch (ModelNotFoundException $e) {
+
+        }
+
+        return match ($metaKey) {
+            '_edd_sl_beta_enabled' => true,
+            '_edd_sl_beta_version' => $latestPreRelease->version,
+            '_edd_sl_beta_changelog' => $latestPreRelease->changelog,
+            '_edd_sl_beta_upgrade_file_key' => 0
+        };
+    }
+
 }

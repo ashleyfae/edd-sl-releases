@@ -19,21 +19,23 @@ class Release
     public int $id;
     public int $product_id;
     public string $version;
-    public string $file_url;
+    public int $file_attachment_id;
+    public string $file_path;
     public ?string $changelog = null;
     public ?array $requirements = null;
     public bool $pre_release = false;
     public string $created_at;
 
     protected array $casts = [
-        'id'           => 'int',
-        'product_id'   => 'int',
-        'version'      => 'string',
-        'file_url'     => 'string',
-        'changelog'    => 'string',
-        'requirements' => 'array',
-        'pre_release'  => 'bool',
-        'created_at'   => 'string',
+        'id'                 => 'int',
+        'product_id'         => 'int',
+        'version'            => 'string',
+        'file_attachment_id' => 'int',
+        'file_path'          => 'string',
+        'changelog'          => 'string',
+        'requirements'       => 'array',
+        'pre_release'        => 'bool',
+        'created_at'         => 'string',
     ];
 
     public function __construct(array $row = [])

@@ -9,6 +9,7 @@
 
 namespace EddSlReleases\API\v1;
 
+use EddSlReleases\Actions\CreateAndPublishRelease;
 use EddSlReleases\Services\ReleaseFileProcessor;
 use EddSlReleases\API\RestRoute;
 use EddSlReleases\Repositories\ReleaseRepository;
@@ -18,13 +19,9 @@ class CreateRelease implements RestRoute
 {
     use ChecksPermissions;
 
-    protected ReleaseRepository $releaseRepository;
-    protected ReleaseFileProcessor $processReleaseFile;
-
-    public function __construct(ReleaseRepository $releaseRepository, ReleaseFileProcessor $processReleaseFile)
+    public function __construct(protected CreateAndPublishRelease $releasePublisher)
     {
-        $this->releaseRepository  = $releaseRepository;
-        $this->processReleaseFile = $processReleaseFile;
+
     }
 
     public function register(): void
@@ -49,19 +46,27 @@ class CreateRelease implements RestRoute
                     'version'      => [
                         'required'          => true,
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return (string) $param;
+                            return sanitize_text_field($param);
                         }
                     ],
                     'file_url'     => [
-                        'required'          => true,
+                        'required'          => false,
                         'sanitize_callback' => function ($param, $request, $key) {
                             return esc_url_raw($param);
                         }
                     ],
+                    'file_zip'     => [
+                        'required' => false,
+                    ],
                     'file_name'    => [
                         'required'          => true,
+                        'validate_callback' => function ($param, $request, $key) {
+                            $param = trim(preg_replace('/[^a-z0-9.\-_]/i', '', $param));
+
+                            return ! empty($param);
+                        },
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return sanitize_text_field(wp_strip_all_tags($param));
+                            return trim(preg_replace('/[^a-z0-9.\-_]/i', '', $param));
                         }
                     ],
                     'changelog'    => [
@@ -71,6 +76,13 @@ class CreateRelease implements RestRoute
                         },
                         'sanitize_callback' => function ($param, $request, $key) {
                             return wp_kses_post($param);
+                        }
+                    ],
+                    'pre_release'  => [
+                        'required'          => false,
+                        'default'           => false,
+                        'sanitize_callback' => function ($param, $request, $key) {
+                            return filter_var($param, FILTER_VALIDATE_BOOL);
                         }
                     ],
                     'requirements' => [
@@ -119,17 +131,11 @@ class CreateRelease implements RestRoute
     public function handle(\WP_REST_Request $request): \WP_REST_Response
     {
         try {
-            $args             = $request->get_params();
-            $args['file_url'] = $this->processReleaseFile->execute(
-                $request->get_param('file_url'),
-                $request->get_param('file_name')
-            );
-
-            $release = $this->releaseRepository->insert($args);
+            $release = $this->releasePublisher->execute($request->get_params());
 
             return new \WP_REST_Response($release->toArray(), 201);
         } catch (\Exception $e) {
-            return new \WP_REST_Response(['error' => $e->getMessage()], 500);
+            return new \WP_REST_Response(['error' => $e->getMessage()], $e->getCode() ? : 500);
         }
     }
 }

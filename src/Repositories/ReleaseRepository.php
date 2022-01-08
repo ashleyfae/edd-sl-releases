@@ -26,15 +26,11 @@ class ReleaseRepository
         $this->wpdb          = $wpdb;
     }
 
-    /**
-     * @param  int  $productId
-     *
-     * @return Release
-     * @throws ModelNotFoundException
-     */
-    public function getLatestStableRelease(int $productId): Release
+    public function getLatest(int $productId, bool $preRelease = false): Release
     {
-        $result = wp_cache_get('latest_stable_release', 'af_edd_sl_releases');
+        $cacheKey = $preRelease ? 'latest_pre_release_' : 'latest_stable_release_';
+        $cacheKey .= $productId;
+        $result   = wp_cache_get($cacheKey, 'af_edd_sl_releases');
         if (is_array($result)) {
             return new Release($result);
         }
@@ -43,20 +39,37 @@ class ReleaseRepository
             $this->wpdb->prepare(
                 "SELECT * FROM {$this->releasesTable->tableName}
                 WHERE product_id = %d
-                AND pre_release = 0
+                AND pre_release = %d
                 ORDER BY created_at DESC",
-                $productId
+                $productId,
+                (int) $preRelease
             ),
             \ARRAY_A
         );
 
-        wp_cache_set('latest_stable_release', $result, 'af_edd_sl_releases');
+        wp_cache_set($cacheKey, $result, 'af_edd_sl_releases');
 
         if ($result) {
             return new Release($result);
         }
 
         throw new ModelNotFoundException();
+    }
+
+    /**
+     * @param  int  $productId
+     *
+     * @return Release
+     * @throws ModelNotFoundException
+     */
+    public function getLatestStableRelease(int $productId): Release
+    {
+        return $this->getLatest($productId);
+    }
+
+    public function getLatestPreRelease(int $productId): Release
+    {
+        return $this->getLatest($productId, true);
     }
 
     /**
@@ -68,27 +81,29 @@ class ReleaseRepository
     public function insert(array $data): Release
     {
         $data = wp_parse_args($data, [
-            'product_id'   => null,
-            'version'      => null,
-            'file_url'     => null,
-            'changelog'    => null,
-            'requirements' => null,
-            'pre_release'  => 0,
-            'created_at'   => gmdate('Y-m-d H:i:s'),
+            'product_id'         => null,
+            'version'            => null,
+            'file_attachment_id' => null,
+            'file_path'          => null,
+            'changelog'          => null,
+            'requirements'       => null,
+            'pre_release'        => 0,
+            'created_at'         => gmdate('Y-m-d H:i:s'),
         ]);
 
         $formats = [
-            'product_id'   => '%d',
-            'version'      => '%s',
-            'file_url'     => '%s',
-            'changelog'    => '%s',
-            'requirements' => '%s',
-            'pre_release'  => '%d',
-            'created_at'   => '%s',
+            'product_id'         => '%d',
+            'version'            => '%s',
+            'file_attachment_id' => '%d',
+            'file_path'          => '%s',
+            'changelog'          => '%s',
+            'requirements'       => '%s',
+            'pre_release'        => '%d',
+            'created_at'         => '%s',
         ];
 
         // Check for any missing values.
-        $required = ['product_id', 'version', 'file_url'];
+        $required = ['product_id', 'version', 'file_attachment_id', 'file_path'];
         foreach ($required as $col) {
             if (empty($data[$col])) {
                 throw new \Exception("Missing required value: {$col}.");
@@ -116,7 +131,24 @@ class ReleaseRepository
             throw new \Exception('Failed to create release.');
         }
 
-        return $this->getById($releaseId);
+        $release = $this->getById($releaseId);
+
+        if ($release->pre_release) {
+            wp_cache_delete('latest_pre_release_'.$release->product_id);
+        } else {
+            wp_cache_delete('latest_stable_release_'.$release->product_id);
+        }
+
+        /**
+         * Triggers when a new release is created.
+         *
+         * @since 1.0
+         *
+         * @param  Release  $release
+         */
+        do_action('edd-sl-releases/release/created', $release);
+
+        return $release;
     }
 
     /**

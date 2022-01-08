@@ -10,6 +10,7 @@
 namespace EddSlReleases\Tests\API;
 
 use EddSlReleases\Repositories\ReleaseRepository;
+use EddSlReleases\ValueObjects\PreparedReleaseFile;
 
 /**
  * @coversDefaultClass \EddSlReleases\API\v1\CreateRelease
@@ -67,13 +68,13 @@ class CreateReleaseTest extends ApiTestCase
      * @covers \EddSlReleases\API\v1\CreateRelease::permissionCheck
      * @covers \EddSlReleases\API\v1\CreateRelease::handle
      */
-    public function test_valid_args_with_authentication_creates_new_release()
+    public function test_valid_args_with_file_url_creates_new_release()
     {
         wp_set_current_user(1);
 
-        self::$processReleaseFile->shouldReceive('execute')
+        self::$processReleaseFile->shouldReceive('executeFromGitAsset')
             ->once()
-            ->andReturn('https://mysite.com/file.zip');
+            ->andReturn(new PreparedReleaseFile('/var/www/mysite.com/file.zip', 1));
 
         $response = $this->makeRestRequest($this->getApiEndpoint(), [
             'version'      => '1.0',
@@ -89,7 +90,8 @@ class CreateReleaseTest extends ApiTestCase
         $release = eddSlReleases(ReleaseRepository::class)->getLatestStableRelease($this->product->ID);
 
         $this->assertSame('1.0', $release->version);
-        $this->assertSame('https://mysite.com/file.zip', $release->file_url);
+        $this->assertSame(1, $release->file_attachment_id);
+        $this->assertSame('/var/www/mysite.com/file.zip', $release->file_path);
         $this->assertNull($release->changelog);
         $this->assertSame(['php' => '7.4'], $release->requirements);
         $this->assertFalse($release->pre_release);
