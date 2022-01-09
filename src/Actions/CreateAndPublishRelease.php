@@ -17,7 +17,6 @@ use EddSlReleases\Services\ReleaseFileProcessor;
 
 class CreateAndPublishRelease
 {
-    protected ?Release $latestStable = null;
 
     public function __construct(
         protected ReleaseFileProcessor $releaseFileProcessor,
