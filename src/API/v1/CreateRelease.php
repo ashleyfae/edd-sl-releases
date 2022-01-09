@@ -46,7 +46,7 @@ class CreateRelease implements RestRoute
                     'version'      => [
                         'required'          => true,
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return sanitize_text_field($param);
+                            return $this->stripUnsafeCharacters(sanitize_text_field($param));
                         }
                     ],
                     'file_url'     => [
@@ -61,21 +61,19 @@ class CreateRelease implements RestRoute
                     'file_name'    => [
                         'required'          => true,
                         'validate_callback' => function ($param, $request, $key) {
-                            $param = trim(preg_replace('/[^a-z0-9.\-_]/i', '', $param));
-
-                            return ! empty($param);
+                            return ! empty($this->stripUnsafeCharacters($param));
                         },
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return trim(preg_replace('/[^a-z0-9.\-_]/i', '', $param));
+                            return $this->stripUnsafeCharacters($param);
                         }
                     ],
                     'changelog'    => [
                         'required'          => false,
                         'validate_callback' => function ($param, $request, $key) {
-                            return is_string($param);
+                            return is_string($param) || is_null($param);
                         },
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return wp_kses_post($param);
+                            return empty(trim($param)) ? null : wp_kses_post($param);
                         }
                     ],
                     'pre_release'  => [
@@ -94,11 +92,16 @@ class CreateRelease implements RestRoute
                                 return true;
                             }
 
+                            if (is_string($param)) {
+                                // Try to decode it.
+                                $param = json_decode($param, true);
+                            }
+
                             if (! is_array($param) && ! is_object($param)) {
                                 return false;
                             }
 
-                            $invalidPlatforms = array_diff_key($param, edd_sl_get_platforms());
+                            $invalidPlatforms = array_diff_key((array) $param, edd_sl_get_platforms());
                             if (! empty($invalidPlatforms)) {
                                 return new \WP_Error(
                                     'invalid_requirement_platforms',
@@ -116,16 +119,25 @@ class CreateRelease implements RestRoute
                             return true;
                         },
                         'sanitize_callback' => function ($param, $request, $key) {
+                            if (is_string($param)) {
+                                $param = json_decode($param, true);
+                            }
+
                             $value = is_array($param) && ! empty($param)
                                 ? array_intersect_key((array) $param, edd_sl_get_platforms())
                                 : null;
 
-                            return $value ?: null;
+                            return $value ? : null;
                         }
                     ]
                 ]
             ]
         );
+    }
+
+    protected function stripUnsafeCharacters(string $input): string
+    {
+        return trim(preg_replace('/[^a-z0-9.\-_]/i', '', $input));
     }
 
     public function handle(\WP_REST_Request $request): \WP_REST_Response

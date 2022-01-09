@@ -11,7 +11,6 @@ namespace EddSlReleases;
 
 use EddSlReleases\Container\Container;
 use EddSlReleases\ServiceProviders\ApiServiceProvider;
-use EddSlReleases\ServiceProviders\ApplicationServiceProvider;
 use EddSlReleases\ServiceProviders\CliServiceProvider;
 use EddSlReleases\ServiceProviders\DatabaseServiceProvider;
 
@@ -28,7 +27,6 @@ class Plugin
      * @var array Service providers to boot.
      */
     private array $serviceProviders = [
-        ApplicationServiceProvider::class,
         DatabaseServiceProvider::class,
         ApiServiceProvider::class,
         CliServiceProvider::class,
