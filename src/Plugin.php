@@ -28,6 +28,7 @@ class Plugin
         ServiceProviders\DatabaseServiceProvider::class,
         ServiceProviders\ApiServiceProvider::class,
         ServiceProviders\CliServiceProvider::class,
+        ServiceProviders\AppServiceProvider::class,
     ];
 
     private bool $serviceProvidersLoaded = false;
