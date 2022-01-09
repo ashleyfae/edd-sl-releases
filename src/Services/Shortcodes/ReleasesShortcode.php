@@ -36,15 +36,6 @@ class ReleasesShortcode implements ShortcodeInterface
             return '';
         }
 
-        if (version_compare(EDD_VERSION, '3.0-beta1', '<')) {
-            return current_user_can('manage_options')
-                ? sprintf(
-                    __('The %s shortcode can only be used with EDD 3.0 or later.', 'edd-sl-releases'),
-                    '['.static::tag().']'
-                )
-                : '';
-        }
-
         $this->args = $args;
 
         ob_start();
@@ -85,8 +76,10 @@ class ReleasesShortcode implements ShortcodeInterface
 
     protected function listPurchasedProducts(): void
     {
-        $products = $this->productsRepository->getPurchasedProducts(get_current_user_id());
+        $products = $this->productsRepository->getLicensedProducts(get_current_user_id());
 
-        $this->viewLoader->loadView('releases-shortcode/products.php');
+        $this->viewLoader->loadView('releases-shortcode/products.php', [
+            'products' => $products
+        ]);
     }
 }

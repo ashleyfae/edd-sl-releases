@@ -9,6 +9,8 @@
 
 namespace EddSlReleases\ServiceProviders;
 
+use EddSlReleases\Actions\DownloadReleaseFile;
+use EddSlReleases\Helpers\Hooks;
 use EddSlReleases\Services\Shortcodes;
 
 class AppServiceProvider implements ServiceProvider
@@ -21,6 +23,8 @@ class AppServiceProvider implements ServiceProvider
 
     public function boot(): void
     {
+        Hooks::addAction('edd_download_sl_release', DownloadReleaseFile::class);
+
         $this->registerShortcodes();
     }
 

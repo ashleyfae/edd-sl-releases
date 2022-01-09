@@ -201,4 +201,21 @@ LIMIT {$offset}, 10",
         return $results;
     }
 
+    public function getByProductVersion(int $productId, string $version): Release
+    {
+        $release = $this->wpdb->get_row($this->wpdb->prepare(
+            "SELECT * FROM {$this->releasesTable->tableName}
+            WHERE product_id = %d
+            AND version = %s",
+            $productId,
+            $version
+        ), ARRAY_A);
+
+        if (empty($release)) {
+            throw new ModelNotFoundException();
+        }
+
+        return new Release($release);
+    }
+
 }

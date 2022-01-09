@@ -17,8 +17,16 @@ class ViewLoader
         return trailingslashit(dirname(EDD_SL_RELEASES_FILE)).'views/';
     }
 
-    public function loadView(string $view): void
+    /**
+     * @param  string  $view  Path to the view.
+     * @param  array  $vars  Variables to make available in the view.
+     *
+     * @return void
+     */
+    public function loadView(string $view, array $vars = []): void
     {
+        extract($vars);
+
         if (file_exists($this->getViewDirectory().$view)) {
             include $this->getViewDirectory().$view;
         } else {
