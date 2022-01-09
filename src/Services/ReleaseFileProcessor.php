@@ -9,6 +9,8 @@
 
 namespace EddSlReleases\Services;
 
+use EddSlReleases\Exceptions\ApiAuthorizationException;
+use EddSlReleases\Exceptions\ApiException;
 use EddSlReleases\Exceptions\FileProcessingException;
 use EddSlReleases\ValueObjects\PreparedReleaseFile;
 
@@ -26,7 +28,7 @@ class ReleaseFileProcessor
      * @param  string  $fileName  Desired file name.
      *
      * @return PreparedReleaseFile
-     * @throws FileProcessingException
+     * @throws FileProcessingException|ApiException|ApiAuthorizationException
      */
     public function executeFromGitAsset(string $remoteUrl, string $fileName): PreparedReleaseFile
     {

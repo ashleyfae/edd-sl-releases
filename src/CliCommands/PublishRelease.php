@@ -78,12 +78,15 @@ class PublishRelease implements CliCommand
                 'file_name'    => $asset['name'],
                 'changelog'    => wp_kses_post($release['body']),
                 'requirements' => null, // @todo
-                'pre_release'  => ! empty($asset['prerelease']) ? 1 : 0,
+                'pre_release'  => ! empty($release['prerelease']) ? 1 : 0,
+                'created_at'   => ! empty($release['published_at'])
+                    ? date('Y-m-d H:i:s', strtotime($release['published_at']))
+                    : gmdate('Y-m-d H:i:s'),
             ];
 
             \WP_CLI::line(json_encode($releaseArgs, JSON_PRETTY_PRINT));
 
-            \WP_CLI::line(__('Do these arguments look correct?', 'edd-sl-releases'));
+            \WP_CLI::confirm(__('Do these arguments look correct?', 'edd-sl-releases'));
 
             $release = $this->releasePublisher->execute($releaseArgs);
 
