@@ -17,7 +17,8 @@ use EddSlReleases\Repositories\ReleaseRepository;
 
 class SyncSoftwareLicensingReleases
 {
-    protected ?Release $latestStable = null;
+    public ?Release $latestStable = null;
+    public ?Release $latestPreRelease = null;
 
     public function __construct(protected ReleaseRepository $releaseRepository)
     {
@@ -38,10 +39,10 @@ class SyncSoftwareLicensingReleases
         }
 
         try {
-            $latestPreRelease = $this->releaseRepository->getLatestPreRelease($productId);
+            $this->latestPreRelease = $this->releaseRepository->getLatestPreRelease($productId);
 
-            $this->updateSlVersion($latestPreRelease);
-            $this->updateProductDownloads($latestPreRelease);
+            $this->updateSlVersion($this->latestPreRelease);
+            $this->updateProductDownloads($this->latestPreRelease);
         } catch (ModelNotFoundException $e) {
             edd_debug_log('No latest pre release found.');
         }

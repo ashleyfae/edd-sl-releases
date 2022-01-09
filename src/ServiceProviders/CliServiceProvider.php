@@ -10,12 +10,13 @@
 namespace EddSlReleases\ServiceProviders;
 
 use EddSlReleases\CliCommands\CliCommand;
-use EddSlReleases\CliCommands\PublishRelease;
+use EddSlReleases\CliCommands;
 
 class CliServiceProvider implements ServiceProvider
 {
     protected array $commands = [
-        PublishRelease::class,
+        CliCommands\PublishRelease::class,
+        CliCommands\SyncProductReleases::class,
     ];
 
     public function register(): void
