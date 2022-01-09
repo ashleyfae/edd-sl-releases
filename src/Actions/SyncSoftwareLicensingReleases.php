@@ -71,17 +71,11 @@ class SyncSoftwareLicensingReleases
             return;
         }
 
-        if ($release->pre_release) {
-            $enabledKey   = '_edd_sl_beta_enabled';
-            $versionKey   = '_edd_sl_beta_version';
-            $fileKey      = '_edd_sl_beta_upgrade_file_key';
-            $changelogKey = '_edd_sl_beta_changelog';
-        } else {
-            $enabledKey   = '_edd_sl_enabled';
-            $versionKey   = '_edd_sl_version';
-            $fileKey      = '_edd_sl_upgrade_file_key';
-            $changelogKey = '_edd_sl_changelog';
-        }
+        $prefix       = $release->pre_release ? '_beta' : '';
+        $enabledKey   = "_edd_sl{$prefix}_enabled";
+        $versionKey   = "_edd_sl{$prefix}_version";
+        $fileKey      = "_edd_sl{$prefix}_upgrade_file_key";
+        $changelogKey = "_edd_sl{$prefix}_changelog";
 
         update_post_meta($release->product_id, $enabledKey, true);
         update_post_meta($release->product_id, $versionKey, $release->version);
