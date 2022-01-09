@@ -3,7 +3,7 @@
  * ReleasesTable.php
  *
  * @package   edd-sl-releases
- * @copyright Copyright (c) 2021, Ashley Gibson
+ * @copyright Copyright (c) 2022, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -19,7 +19,7 @@ class ReleasesTable
     /**
      * @var string Current table version number.
      */
-    private string $version = '0.2';
+    private string $version = '0.3';
 
     protected \wpdb $wpdb;
 
@@ -64,6 +64,7 @@ class ReleasesTable
                 version varchar(20) NOT NULL,
                 file_attachment_id bigint(20) UNSIGNED NOT NULL,
                 file_path longtext NOT NULL,
+                file_name longtext NOT NULL,
                 changelog longtext DEFAULT NULL,
                 requirements longtext DEFAULT NULL,
                 pre_release tinyint(1) UNSIGNED NOT NULL DEFAULT 0,

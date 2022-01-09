@@ -21,6 +21,7 @@ class Release
     public string $version;
     public int $file_attachment_id;
     public string $file_path;
+    public string $file_name;
     public ?string $changelog = null;
     public ?array $requirements = null;
     public bool $pre_release = false;
@@ -32,6 +33,7 @@ class Release
         'version'            => 'string',
         'file_attachment_id' => 'int',
         'file_path'          => 'string',
+        'file_name'          => 'string',
         'changelog'          => 'string',
         'requirements'       => 'array',
         'pre_release'        => 'bool',
