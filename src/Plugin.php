@@ -10,9 +10,7 @@
 namespace EddSlReleases;
 
 use EddSlReleases\Container\Container;
-use EddSlReleases\ServiceProviders\ApiServiceProvider;
-use EddSlReleases\ServiceProviders\CliServiceProvider;
-use EddSlReleases\ServiceProviders\DatabaseServiceProvider;
+use EddSlReleases\ServiceProviders;
 
 /**
  * @mixin Container
@@ -27,9 +25,9 @@ class Plugin
      * @var array Service providers to boot.
      */
     private array $serviceProviders = [
-        DatabaseServiceProvider::class,
-        ApiServiceProvider::class,
-        CliServiceProvider::class,
+        ServiceProviders\DatabaseServiceProvider::class,
+        ServiceProviders\ApiServiceProvider::class,
+        ServiceProviders\CliServiceProvider::class,
     ];
 
     private bool $serviceProvidersLoaded = false;
