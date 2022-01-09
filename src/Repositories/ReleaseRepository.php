@@ -105,7 +105,7 @@ class ReleaseRepository
         ];
 
         // Check for any missing values.
-        $required = ['product_id', 'version', 'file_attachment_id', 'file_path'];
+        $required = ['product_id', 'version', 'file_attachment_id', 'file_path', 'file_name'];
         foreach ($required as $col) {
             if (empty($data[$col])) {
                 throw new \Exception("Missing required value: {$col}.");

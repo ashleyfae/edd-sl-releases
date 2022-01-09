@@ -11,6 +11,7 @@ namespace EddSlReleases\Tests\Database;
 
 use EddSlReleases\Models\Release;
 use EddSlReleases\Repositories\ReleaseRepository;
+use EddSlReleases\Tests\Helpers\Factories\ReleaseFactory;
 use EddSlReleases\Tests\TestCase;
 use EddSlReleases\Tests\Traits\InteractsWithProducts;
 
@@ -42,7 +43,8 @@ class ReleaseRepositoryTest extends TestCase
             'product_id'         => $this->product->ID,
             'version'            => '1.5',
             'file_attachment_id' => 1,
-            'file_path'          => 'https://sampleurl.com',
+            'file_path'          => '/var/www/release-1.5.zip',
+            'file_name'          => 'release-1.5.zip',
         ]);
 
         $this->assertInstanceOf(Release::class, $release);
@@ -61,8 +63,9 @@ class ReleaseRepositoryTest extends TestCase
         $this->expectExceptionMessage("Missing required value: product_id");
 
         $this->releaseRepository->insert([
-            'version'  => '1.5',
-            'file_url' => 'https://sampleurl.com',
+            'version'   => '1.5',
+            'file_url'  => 'https://sampleurl.com',
+            'file_name' => 'release-1.5.zip',
         ]);
     }
 

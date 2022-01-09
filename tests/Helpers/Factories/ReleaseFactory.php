@@ -22,6 +22,7 @@ class ReleaseFactory
             'version'            => '1.0',
             'file_attachment_id' => 2,
             'file_path'          => '/path/to/file.zip',
+            'file_name'          => 'file.zip',
             'pre_release'        => 0,
         ]));
     }
