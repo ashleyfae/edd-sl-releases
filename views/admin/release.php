@@ -22,8 +22,10 @@ $productLink = '<a href="'.esc_url($productUrl).'">'.esc_html($product->get_name
     <h1>
         <?php
         if (isset($release->id)) {
+            /* Translators: %s name of the product */
             printf(esc_html__('Edit "%s" Release', 'edd-sl-releases'), $productLink);
         } else {
+            /* Translators: %s name of the product */
             printf(esc_html__('Create "%s" Release', 'edd-sl-releases'), $productLink);
         }
         ?>
