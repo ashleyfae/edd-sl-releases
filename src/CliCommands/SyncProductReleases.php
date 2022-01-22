@@ -42,12 +42,14 @@ class SyncProductReleases implements CliCommand
             \WP_CLI::error(__('Invalid product.', 'edd-sl-releases'));
         }
 
+        /* Translators: %s name of the product */
         \WP_CLI::line(sprintf(__('Syncing product %s...', 'edd-sl-releases'), $product->get_name()));
 
         $this->productSyncer->execute($product->ID);
 
         \WP_CLI::success(sprintf(
-            __('Sync complete. Latest stable: %s; Latest beta: %s.', 'edd-sl-releases'),
+            /* Translators: $%1$s stable version; %2$s beta version */
+            __('Sync complete. Latest stable: %1$s; Latest beta: %2$s.', 'edd-sl-releases'),
             $this->productSyncer->latestStable->version ?? __('n/a', 'edd-sl-releases'),
             $this->productSyncer->latestPreRelease->version ?? __('n/a', 'edd-sl-releases'),
         ));

@@ -9,8 +9,10 @@
 
 namespace EddSlReleases\ServiceProviders;
 
+use EddSlReleases\Actions\Admin\ShowProductMetabox;
 use EddSlReleases\Actions\DownloadReleaseFile;
 use EddSlReleases\Helpers\Hooks;
+use EddSlReleases\Services\AssetLoader;
 use EddSlReleases\Services\Shortcodes;
 
 class AppServiceProvider implements ServiceProvider
@@ -24,6 +26,9 @@ class AppServiceProvider implements ServiceProvider
     public function boot(): void
     {
         Hooks::addAction('edd_download_sl_release', DownloadReleaseFile::class);
+        Hooks::addAction('admin_enqueue_scripts', AssetLoader::class, 'admin');
+        Hooks::addAction('wp_enqueue_scripts', AssetLoader::class, 'frontend');
+        Hooks::addAction('add_meta_boxes', ShowProductMetabox::class);
 
         $this->registerShortcodes();
     }

@@ -43,13 +43,13 @@ class ListReleases implements RestRoute
                         }
                     ],
                     'pre_releases' => [
-                        'default'           => false,
+                        'default'           => null,
                         'required'          => false,
                         'validate_callback' => function ($param, $request, $key) {
-                            return in_array($param, [true, false]);
+                            return in_array($param, [true, false, null], true);
                         },
                         'sanitize_callback' => function ($param, $request, $key) {
-                            return filter_var($param, FILTER_VALIDATE_BOOL);
+                            return is_null($param) ? null : filter_var($param, FILTER_VALIDATE_BOOL);
                         }
                     ],
                     'offset'       => [
@@ -72,6 +72,7 @@ class ListReleases implements RestRoute
         $releases = $this->releaseRepository->listForProduct(
             $request->get_param('product_id'),
             $request->get_param('pre_releases'),
+            10,
             $request->get_param('offset')
         );
 

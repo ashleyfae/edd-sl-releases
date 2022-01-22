@@ -1,0 +1,61 @@
+.edd-sl-releases-release {
+    margin-bottom: 2rem;
+
+    &--header {
+        margin-bottom: 1rem;
+
+        @media (min-width: 768px) {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        h2 {
+            margin: 0 0 .125rem;
+        }
+    }
+}
+
+.edd-sl-releases-requirements {
+    margin-top: .25rem;
+}
+.edd-sl-releases-requirement {
+    background: #f1f5f9; // 100
+    border-radius: 6px;
+    color: #64748b; // 500
+    display: inline-flex;
+    font: {
+        size: 13px;
+        weight: 600;
+    }
+    line-height: 13px;
+    text-transform: uppercase;
+
+    &--platform {
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+        padding: .25rem .3rem .25rem .5rem;
+    }
+
+    &--php {
+        .edd-sl-releases-requirement--platform {
+            background: #818cf8;
+            color: white;
+        }
+    }
+    &--wp {
+        .edd-sl-releases-requirement--platform {
+            background: #60a5fa;
+            color: white;
+        }
+    }
+
+    &--version {
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        padding: .25rem .5rem .25rem .3rem;
+    }
+
+    > span {
+        display: inline-block;
+    }
+}

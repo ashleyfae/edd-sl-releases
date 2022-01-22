@@ -11,6 +11,7 @@ namespace EddSlReleases\Services\Shortcodes;
 
 use EddSlReleases\Helpers\ViewLoader;
 use EddSlReleases\Repositories\PurchasedProductsRepository;
+use EddSlReleases\Repositories\ReleaseRepository;
 use JetBrains\PhpStorm\Pure;
 
 class ReleasesShortcode implements ShortcodeInterface
@@ -19,7 +20,8 @@ class ReleasesShortcode implements ShortcodeInterface
 
     public function __construct(
         protected ViewLoader $viewLoader,
-        protected PurchasedProductsRepository $productsRepository
+        protected PurchasedProductsRepository $productsRepository,
+        protected ReleaseRepository $releaseRepository
     ) {
 
     }
@@ -49,13 +51,11 @@ class ReleasesShortcode implements ShortcodeInterface
         return ob_get_clean();
     }
 
-    #[Pure]
     protected function isProductView(): bool
     {
         return ! empty($this->getQueriedProductId());
     }
 
-    #[Pure]
     protected function getQueriedProductId(): ?int
     {
         if (is_numeric($this->args['product'] ?? null)) {
@@ -71,7 +71,9 @@ class ReleasesShortcode implements ShortcodeInterface
 
     protected function listReleasesForProduct(): void
     {
-        $this->viewLoader->loadView('releases-shortcode/releases.php');
+        $this->viewLoader->loadView('releases-shortcode/releases.php', [
+            'releases' => $this->releaseRepository->listForProduct($this->getQueriedProductId())
+        ]);
     }
 
     protected function listPurchasedProducts(): void

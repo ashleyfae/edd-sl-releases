@@ -1,0 +1,26 @@
+{
+  "name": "edd-sl-releases",
+  "version": "1.0.0",
+  "description": "Brings historical releases to EDD Software Licensing.",
+  "scripts": {
+    "build": "npm run i18n && mix --production",
+    "dev": "mix watch",
+    "i18n": "wp i18n make-pot . languages/edd-sl-releases.pot --domain=edd-sl-releases --headers='{\"Report-Msgid-Bugs-To\": \"https://github.com/ashleyfae/edd-sl-releases/issues\"}'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashleyfae/edd-sl-releases.git"
+  },
+  "keywords": [],
+  "author": "Ashley Gibson",
+  "bugs": {
+    "url": "https://github.com/ashleyfae/edd-sl-releases/issues"
+  },
+  "homepage": "https://github.com/ashleyfae/edd-sl-releases#readme",
+  "devDependencies": {
+    "laravel-mix": "^6.0.41",
+    "resolve-url-loader": "^5.0.0",
+    "sass": "^1.49.0",
+    "sass-loader": "^12.4.0"
+  }
+}

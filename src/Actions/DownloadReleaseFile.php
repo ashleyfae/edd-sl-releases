@@ -44,19 +44,21 @@ class DownloadReleaseFile
         }
 
         try {
-            $release = $this->releaseRepository->getByProductVersion(
-                intval($data['product_id']),
-                sanitize_text_field($data['version'])
-            );
+            try {
+                $release = $this->releaseRepository->getByProductVersion(
+                    intval($data['product_id']),
+                    sanitize_text_field($data['version'])
+                );
 
-            $this->processDownload($release);
-        } catch (ModelNotFoundException $e) {
-            $this->processDownloadFromNonReleaseFile(
-                get_current_user_id(),
-                $data['product_id']
-            );
-            // @todo try to use SL directly?
-            wp_die(__('No such release.', 'edd-sl-releases'));
+                $this->processDownload($release);
+            } catch (ModelNotFoundException $e) {
+                $this->processDownloadFromNonReleaseFile(
+                    get_current_user_id(),
+                    $data['product_id']
+                );
+                // @todo try to use SL directly?
+                wp_die(__('No such release.', 'edd-sl-releases'));
+            }
         } catch (FileDownloadException $e) {
             wp_die(__('Failed to download file. Please contact customer support.', 'edd-sl-releases'));
         } catch (\Exception $e) {
@@ -98,6 +100,9 @@ class DownloadReleaseFile
         edd_deliver_download($release->file_path);
     }
 
+    /**
+     * @throws ModelNotFoundException|FileDownloadException|ModelNotFoundException
+     */
     protected function processDownloadFromNonReleaseFile(int $userId, int $productId): void
     {
         $product = new \EDD_SL_Download($productId);

@@ -7,6 +7,12 @@
 composer.json export-ignore
 composer.lock export-ignore
 
+# NPM / Webpack
+package.json export-ignore
+package-lock.json export-ignore
+webpack.mix.js export-ignore
+mix-manifest.json export-ignore
+
 # Tests
 /tests/ export-ignore
 phpunit.xml export-ignore

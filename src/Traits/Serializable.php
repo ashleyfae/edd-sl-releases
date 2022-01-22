@@ -12,6 +12,11 @@ namespace EddSlReleases\Traits;
 trait Serializable
 {
 
+    protected function arrayAppend(): array
+    {
+        return [];
+    }
+
     public function toArray(): array
     {
         $data = [];
@@ -27,7 +32,7 @@ trait Serializable
             }
         }
 
-        return $data;
+        return array_merge($data, $this->arrayAppend());
     }
 
     public function toJson(): string

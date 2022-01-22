@@ -9,7 +9,7 @@
  * @var EDD_SL_Download[] $products
  */
 
-use EddSlReleases\ValueObjects\ReleaseDownloadUrl;
+use EddSlReleases\ValueObjects;
 
 if ($products) {
     foreach ($products as $product) {
@@ -27,11 +27,14 @@ if ($products) {
             <h2><?php echo esc_html($product->get_name()); ?></h2>
 
             <div class="edd-sl-releases--product-actions">
-                <a href="<?php echo esc_url(new ReleaseDownloadUrl($product->ID, $version)); ?>">
-                    <?php echo esc_html(sprintf(__('Download version %s', 'edd-sl-releases'), $version)); ?>
+                <a href="<?php echo esc_url(new ValueObjects\ReleaseDownloadUrl($product->ID, $version)); ?>">
+                    <?php
+                    /* Translators: %s version number */
+                    echo esc_html(sprintf(__('Download version %s', 'edd-sl-releases'), $version));
+                    ?>
                 </a>
 
-                <a href="#">
+                <a href="<?php echo esc_url(new ValueObjects\ProductReleasesUrl($product->ID)); ?>">
                     <?php esc_html_e('Previous releases', 'edd-sl-releases'); ?>
                 </a>
             </div>

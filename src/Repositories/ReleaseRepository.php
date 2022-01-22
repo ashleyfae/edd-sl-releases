@@ -174,20 +174,28 @@ class ReleaseRepository
      * Lists the releases for a given product.
      *
      * @param  int  $productId
-     * @param  bool  $preReleases
+     * @param  bool|null  $preReleases
+     * @param  int  $perPage
      * @param  int  $offset
      *
      * @return Release[]
      */
-    public function listForProduct(int $productId, bool $preReleases = false, int $offset = 0): array
+    public function listForProduct(int $productId, ?bool $preReleases = null, int $perPage = 10, int $offset = 0): array
     {
+        $preReleasesSql = '';
+        if (! is_null($preReleases)) {
+            $preReleasesSql = $this->wpdb->prepare("AND pre_release = %d", $preReleases);
+        }
+
         $results = $this->wpdb->get_results($this->wpdb->prepare(
             "SELECT * FROM {$this->releasesTable->tableName}
-WHERE product_id = %d AND pre_release = %d
-ORDER BY created_at DESC
-LIMIT {$offset}, 10",
+                WHERE product_id = %d
+                {$preReleasesSql}
+                ORDER BY created_at DESC
+                LIMIT %d, %d",
             $productId,
-            (int) $preReleases
+            $offset,
+            $perPage
         ), ARRAY_A);
 
         if (empty($results)) {
@@ -199,6 +207,21 @@ LIMIT {$offset}, 10",
         }
 
         return $results;
+    }
+
+    public function countForProduct(int $productId, ?bool $preReleases = null): int
+    {
+        $preReleasesSql = '';
+        if (! is_null($preReleases)) {
+            $preReleasesSql = $this->wpdb->prepare("AND pre_release = %d", $preReleases);
+        }
+
+        $count = $this->wpdb->get_var($this->wpdb->prepare(
+            "SELECT COUNT(*) FROM {$this->releasesTable->tableName} WHERE product_id = %d {$preReleasesSql}",
+            $productId
+        ));
+
+        return (int) $count;
     }
 
     public function getByProductVersion(int $productId, string $version): Release

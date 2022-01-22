@@ -106,8 +106,9 @@ class CreateRelease implements RestRoute
                                 return new \WP_Error(
                                     'invalid_requirement_platforms',
                                     sprintf(
+                                        /* Translators: %1$s - invalid platform(s), %1$s allowed platforms */
                                         __(
-                                            'Invalid requirement platforms: %s. Only the following are allowed: %s.',
+                                            'Invalid requirement platforms: %1$s. Only the following are allowed: %2$s.',
                                             'edd-sl-releases'
                                         ),
                                         json_encode($invalidPlatforms),
