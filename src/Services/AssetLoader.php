@@ -80,11 +80,17 @@ class AssetLoader
     {
         global $post;
 
-        if (! $post instanceof \WP_Post) {
-            return false;
-        }
+        $shouldEnqueue = $post instanceof \WP_Post && has_shortcode($post->post_content, ReleasesShortcode::tag());
 
-        return has_shortcode($post->post_content, ReleasesShortcode::tag());
+        /**
+         * Filters whether we should enqueue the frontend assets.
+         *
+         * @since 1.0
+         *
+         * @param  bool  $shouldEnqueue
+         * @param  \WP_Post|false  $post
+         */
+        return apply_filters('edd-sl-releases/assets/enqueue-frontend', $shouldEnqueue, $post);
     }
 
     private function shouldEnqueueAdmin(): bool

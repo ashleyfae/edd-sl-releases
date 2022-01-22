@@ -1,0 +1,17 @@
+.edd-sl-releases-product {
+    margin-bottom: 2rem;
+
+    h2 {
+        margin: 0 0 .25rem;
+    }
+
+    @media (min-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            margin: 0;
+        }
+    }
+}

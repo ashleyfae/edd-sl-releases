@@ -48,6 +48,8 @@ class PurchasedProductsRepository
             'post_type'      => 'download',
             'status'         => 'post_status',
             'posts_per_page' => -1, // @todo Pagination
+            'orderby'        => 'post_title',
+            'order'          => 'asc',
         ]);
 
         $products = [];
