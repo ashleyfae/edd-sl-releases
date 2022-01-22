@@ -121,6 +121,16 @@ class CreateRelease implements RestRoute
                             return true;
                         },
                         'sanitize_callback' => [$this, 'sanitizeRequirements'],
+                    ],
+                    'released_at'  => [
+                        'required'          => false,
+                        'default'           => gmdate('Y-m-d H:i:s'),
+                        'validate_callback' => function ($param, $request, $key) {
+                            return strtotime($param) !== false;
+                        },
+                        'sanitize_callback' => function ($param, $request, $key) {
+                            return date('Y-m-d H:i:s', strtotime($param));
+                        }
                     ]
                 ]
             ]
