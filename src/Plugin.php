@@ -17,7 +17,7 @@ use EddSlReleases\ServiceProviders;
  */
 class Plugin
 {
-    const VERSION = '0.1';
+    const VERSION = EDD_SL_RELEASES_VERSION;
 
     private Container $container;
 

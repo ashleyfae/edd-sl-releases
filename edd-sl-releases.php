@@ -3,7 +3,7 @@
  * Plugin Name: EDD Software Licensing Releases
  * Plugin URI: https://github.com/ashleyfae/edd-sl-releases
  * Description: Brings historical releases to EDD Software Licensing.
- * Version: 0.3
+ * Version: 0.4
  * Author: Ashley Gibson
  * Author URI: https://github.com/ashleyfae
  * Text Domain: edd-sl-releases
@@ -11,7 +11,7 @@
  * GitHub Plugin URI: ashleyfae/edd-sl-releases
  *
  * @package   edd-sl-releases
- * @copyright Copyright (c) 2021, Ashley Gibson
+ * @copyright Copyright (c) 2022, Ashley Gibson
  * @license   GPL2+
  */
 
@@ -24,7 +24,8 @@ if (
     return;
 }
 
-const EDD_SL_RELEASES_FILE = __FILE__;
+const EDD_SL_RELEASES_VERSION = '0.4';
+const EDD_SL_RELEASES_FILE    = __FILE__;
 
 require 'vendor/autoload.php';
 
