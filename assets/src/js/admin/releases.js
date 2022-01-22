@@ -5,7 +5,10 @@ import {parseErrorMessage} from "../utils/errors";
 
 export function renderProductReleases() {
     const wrapper = document.getElementById( 'edd-sl-releases' );
-    if ( ! wrapper ) {
+    const loading = document.getElementById( 'edd-sl-releases-loading' );
+    const noReleases = document.getElementById( 'edd-sl-releases-none' );
+    const listReleases = document.getElementById( 'edd-sl-releases-list' );
+    if ( ! wrapper || ! listReleases ) {
         return;
     }
 
@@ -14,54 +17,60 @@ export function renderProductReleases() {
         return;
     }
 
-    wrapper.innerHTML = '<p>' + eddSlReleases.loadingReleases + '</p>';
-
     apiRequest( 'products/' + productId + '/releases' )
         .then( response => {
-            if ( ! response.releases || ! response.releases.length ) {
-                wrapper.innerHTML = '<p>' + eddSlReleases.noReleases + '</p>';
+            if ( ! response.releases || response.releases.length === 0 ) {
+                if ( noReleases ) {
+                    noReleases.classList.remove( 'hidden' );
+                }
             } else {
-                wrapper.innerHTML = response.releases.map( buildReleaseMarkup ).join( '' );
+                listReleases.innerHTML = response.releases.map( buildReleaseMarkup ).join( '' );
+                listReleases.classList.remove( 'hidden' );
             }
         } )
         .catch( error => {
             console.log( 'Error fetching releases', error );
 
             error.json().then( response => {
-                wrapper.innerText = parseErrorMessage( response );
+                const errorWrap = document.getElementById( 'edd-sl-releases-errors' );
+
+                if ( errorWrap ) {
+                    errorWrap.innerText = parseErrorMessage( response );
+                    errorWrap.classList.remove( 'hidden' );
+                }
             } )
+        } )
+        .finally( () => {
+            if ( loading ) {
+                loading.classList.add( 'hidden' );
+            }
         } )
 }
 
 function buildReleaseMarkup( release ) {
-    let preRelease = '';
-
+    let releaseType = '';
     if ( release.pre_release ) {
-        preRelease = `<span class="edd-sl-releases--pre-release">${eddSlReleases.preRelease}</span>`;
+        releaseType = `<span class="edd-sl-releases--release--pre-release">${eddSlReleases.preRelease}</span>`;
+    } else {
+        releaseType = `<span class="edd-sl-releases--release--stable">${eddSlReleases.stableRelease}</span>`;
     }
 
     return `
 <div class="edd-sl-releases--release" data-id="${release.id}">
     <div class="edd-sl-releases--release--header">
         <h4>
-            ${release.version}
-            ${preRelease}
+            <span class="edd-sl-releases--release--version">${release.version}</span>
+            ${releaseType}
+            <span class="edd-sl-releases--release--date">
+                &ndash;
+                ${release.released_at_display}
+            </span>
         </h4>
-        <span class="edd-sl-releases--release--date">
-            ${release.created_at_display}
-        </span>    
-    </div>
-    <div class="edd-sl-releases--release--body">
-        <div class="edd-form-group edd-form-group__control">
-            <label
-                for="release-${release.id}-changelog"
-                class="edd-form-group__label"
-            >${eddSlReleases.changelog}</label>
-            <textarea
-                id="release-${release.id}-changelog"
-                rows="5"
-            >${release.changelog || ''}</textarea>
-        </div>
+        <div class="edd-sl-releases--release--actions">
+            <a href="${release.edit_url}" class="button button-secondary">
+                ${eddSlReleases.edit}
+            </a>
+        </div>    
     </div>
 </div>
     `;

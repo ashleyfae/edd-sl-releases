@@ -1,0 +1,43 @@
+#edd-sl-releases-list {
+  margin: 1rem 0;
+}
+#edd-sl-releases-list .edd-sl-releases--release {
+  background: #f9f9f9;
+  border: 1px solid #e5e5e5;
+  border-top-width: 0;
+  padding: 1rem;
+}
+#edd-sl-releases-list .edd-sl-releases--release:first-child {
+  border-top-width: 1px;
+}
+#edd-sl-releases-list .edd-sl-releases--release h4 {
+  margin: 0;
+}
+#edd-sl-releases-list .edd-sl-releases--release--pre-release, #edd-sl-releases-list .edd-sl-releases--release--stable {
+  border-radius: 6px;
+  display: inline-block;
+  font-weight: normal;
+  line-height: 1.5em;
+  margin: 0 0.25rem;
+  padding: 0.15rem 0.5rem;
+}
+#edd-sl-releases-list .edd-sl-releases--release--pre-release {
+  background: #f9f3e5;
+  color: #7d4c01;
+}
+#edd-sl-releases-list .edd-sl-releases--release--stable {
+  background: #e5f5f0;
+  color: #017d5c;
+}
+#edd-sl-releases-list .edd-sl-releases--release--date {
+  color: #646970;
+  font-size: 12px;
+  font-weight: normal;
+}
+@media (min-width: 768px) {
+  #edd-sl-releases-list .edd-sl-releases--release--header {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+  }
+}

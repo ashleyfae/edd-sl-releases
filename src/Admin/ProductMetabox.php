@@ -1,17 +1,18 @@
 <?php
 /**
- * ShowProductMetabox.php
+ * ProductMetabox.php
  *
  * @package   edd-sl-releases
  * @copyright Copyright (c) 2022, Ashley Gibson
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Actions\Admin;
+namespace EddSlReleases\Admin;
 
 use EddSlReleases\Helpers\ViewLoader;
+use function add_meta_box;
 
-class ShowProductMetabox
+class ProductMetabox
 {
 
     public function __construct(protected ViewLoader $viewLoader)
@@ -34,8 +35,13 @@ class ShowProductMetabox
     public function render(\WP_Post $post): void
     {
         $this->viewLoader->loadView('admin/metabox.php', [
-            'post'    => $post,
-            'product' => new \EDD_SL_Download($post->ID),
+            'post'      => $post,
+            'product'   => new \EDD_SL_Download($post->ID),
+            'createUrl' => add_query_arg([
+                'post_type' => 'download',
+                'page'      => 'edd-sl-releases',
+                'product'   => urlencode($post->ID),
+            ], admin_url('edit.php'))
         ]);
     }
 

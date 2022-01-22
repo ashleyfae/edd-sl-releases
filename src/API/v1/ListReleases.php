@@ -31,7 +31,7 @@ class ListReleases implements RestRoute
             [
                 'methods'             => \WP_REST_Server::READABLE,
                 'callback'            => [$this, 'handle'],
-                'permission_callback' => [$this, 'permissionCheck'],
+                'permission_callback' => [$this, 'restPermissionCheck'],
                 'args'                => [
                     'product_id'   => [
                         'required'          => true,

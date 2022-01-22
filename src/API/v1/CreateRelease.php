@@ -14,10 +14,11 @@ use EddSlReleases\Services\ReleaseFileProcessor;
 use EddSlReleases\API\RestRoute;
 use EddSlReleases\Repositories\ReleaseRepository;
 use EddSlReleases\Traits\ChecksPermissions;
+use EddSlReleases\Traits\SanitizesRequirements;
 
 class CreateRelease implements RestRoute
 {
-    use ChecksPermissions;
+    use ChecksPermissions, SanitizesRequirements;
 
     public function __construct(protected CreateAndPublishRelease $releasePublisher)
     {
@@ -32,7 +33,7 @@ class CreateRelease implements RestRoute
             [
                 'methods'             => \WP_REST_Server::CREATABLE,
                 'callback'            => [$this, 'handle'],
-                'permission_callback' => [$this, 'permissionCheck'],
+                'permission_callback' => [$this, 'restPermissionCheck'],
                 'args'                => [
                     'product_id'   => [
                         'required'          => true,
@@ -119,17 +120,7 @@ class CreateRelease implements RestRoute
 
                             return true;
                         },
-                        'sanitize_callback' => function ($param, $request, $key) {
-                            if (is_string($param)) {
-                                $param = json_decode($param, true);
-                            }
-
-                            $value = is_array($param) && ! empty($param)
-                                ? array_intersect_key((array) $param, edd_sl_get_platforms())
-                                : null;
-
-                            return $value ? : null;
-                        }
+                        'sanitize_callback' => [$this, 'sanitizeRequirements'],
                     ]
                 ]
             ]

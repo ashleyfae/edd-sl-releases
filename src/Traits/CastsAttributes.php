@@ -33,7 +33,7 @@ trait CastsAttributes
 
         switch ($this->casts[$propertyName]) {
             case 'array' :
-                return json_decode($value, true);
+                return is_array($value) ? $value : json_decode($value, true);
             case 'bool' :
                 return (bool) $value;
             case 'float' :

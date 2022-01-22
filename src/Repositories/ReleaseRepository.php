@@ -40,7 +40,7 @@ class ReleaseRepository
                 "SELECT * FROM {$this->releasesTable->tableName}
                 WHERE product_id = %d
                 AND pre_release = %d
-                ORDER BY created_at DESC",
+                ORDER BY released_at DESC",
                 $productId,
                 (int) $preRelease
             ),
@@ -57,6 +57,8 @@ class ReleaseRepository
     }
 
     /**
+     * Returns the latest stable release.
+     *
      * @param  int  $productId
      *
      * @return Release
@@ -67,6 +69,14 @@ class ReleaseRepository
         return $this->getLatest($productId);
     }
 
+    /**
+     * Returns the latest pre-release.
+     *
+     * @param  int  $productId
+     *
+     * @return Release
+     * @throws ModelNotFoundException
+     */
     public function getLatestPreRelease(int $productId): Release
     {
         return $this->getLatest($productId, true);
@@ -89,7 +99,7 @@ class ReleaseRepository
             'changelog'          => null,
             'requirements'       => null,
             'pre_release'        => 0,
-            'created_at'         => gmdate('Y-m-d H:i:s'),
+            'released_at'        => gmdate('Y-m-d H:i:s'),
         ]);
 
         $formats = [
@@ -101,7 +111,7 @@ class ReleaseRepository
             'changelog'          => '%s',
             'requirements'       => '%s',
             'pre_release'        => '%d',
-            'created_at'         => '%s',
+            'released_at'        => '%s',
         ];
 
         // Check for any missing values.
@@ -154,6 +164,46 @@ class ReleaseRepository
     }
 
     /**
+     * Updates an existing release.
+     *
+     * @param  Release  $release
+     *
+     * @return void
+     */
+    public function update(Release $release): void
+    {
+        $this->wpdb->update(
+            $this->releasesTable->tableName,
+            [
+                'version'            => $release->version,
+                'file_attachment_id' => $release->file_attachment_id,
+                'file_path'          => $release->file_path,
+                'file_name'          => $release->file_name,
+                'changelog'          => $release->changelog,
+                'requirements'       => $release->requirements ? json_encode($release->requirements) : null,
+                'pre_release'        => (int) $release->pre_release,
+                'released_at'        => $release->released_at,
+            ],
+            [
+                'id' => $release->id,
+            ],
+            [
+                '%s', // version
+                '%d', // file_attachment_id
+                '%s', // file_path
+                '%s', // file_name
+                '%s', // changelog
+                '%s', // requirements
+                '%d', // pre_release
+                '%s', // released_at
+            ],
+            [
+                '%d'
+            ]
+        );
+    }
+
+    /**
      * @throws ModelNotFoundException
      */
     public function getById(int $releaseId): Release
@@ -191,7 +241,7 @@ class ReleaseRepository
             "SELECT * FROM {$this->releasesTable->tableName}
                 WHERE product_id = %d
                 {$preReleasesSql}
-                ORDER BY created_at DESC
+                ORDER BY released_at DESC
                 LIMIT %d, %d",
             $productId,
             $offset,

@@ -7,14 +7,78 @@
   \********************************/
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
-__webpack_require__(/*! ./admin/releases */ "./assets/src/js/admin/releases.js");
-
 var _require = __webpack_require__(/*! ./admin/releases */ "./assets/src/js/admin/releases.js"),
     renderProductReleases = _require.renderProductReleases;
 
+var _require2 = __webpack_require__(/*! ./admin/media-upload */ "./assets/src/js/admin/media-upload.js"),
+    mediaButtonEvent = _require2.mediaButtonEvent;
+
 document.addEventListener('DOMContentLoaded', function () {
   renderProductReleases();
+  mediaButtonEvent();
 });
+
+/***/ }),
+
+/***/ "./assets/src/js/admin/media-upload.js":
+/*!*********************************************!*\
+  !*** ./assets/src/js/admin/media-upload.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "mediaButtonEvent": () => (/* binding */ mediaButtonEvent)
+/* harmony export */ });
+/* global eddSlReleases */
+function mediaButtonEvent() {
+  var mediaButtons = document.querySelectorAll('.edd-sl-releases--upload');
+
+  if (!mediaButtons) {
+    return;
+  }
+
+  mediaButtons.forEach(function (button) {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      var fileIdEl = document.getElementById(button.getAttribute('data-id-el'));
+
+      if (!fileIdEl) {
+        console.log('Missing file ID element.');
+        return;
+      }
+
+      var mediaFrame = wp.media({
+        title: eddSlReleases.uploadReleaseFile,
+        button: {
+          text: eddSlReleases.selectFile
+        },
+        multiple: false
+      });
+      mediaFrame.open();
+      mediaFrame.on('select', function () {
+        var selection = mediaFrame.state().get('selection');
+        selection.map(function (attachment) {
+          attachment.toJSON();
+          console.log('attachment', attachment);
+
+          if (attachment.id) {
+            fileIdEl.value = attachment.id;
+          }
+
+          if (attachment.attributes && attachment.attributes.filename) {
+            var fileNameEl = document.getElementById('edd-sl-releases-file-name');
+
+            if (fileNameEl && !fileNameEl.value) {
+              fileNameEl.value = attachment.attributes.filename;
+            }
+          }
+        });
+      });
+    });
+  });
+}
 
 /***/ }),
 
@@ -36,8 +100,11 @@ __webpack_require__.r(__webpack_exports__);
 
 function renderProductReleases() {
   var wrapper = document.getElementById('edd-sl-releases');
+  var loading = document.getElementById('edd-sl-releases-loading');
+  var noReleases = document.getElementById('edd-sl-releases-none');
+  var listReleases = document.getElementById('edd-sl-releases-list');
 
-  if (!wrapper) {
+  if (!wrapper || !listReleases) {
     return;
   }
 
@@ -47,29 +114,42 @@ function renderProductReleases() {
     return;
   }
 
-  wrapper.innerHTML = '<p>' + eddSlReleases.loadingReleases + '</p>';
   (0,_utils_api__WEBPACK_IMPORTED_MODULE_0__["default"])('products/' + productId + '/releases').then(function (response) {
-    if (!response.releases || !response.releases.length) {
-      wrapper.innerHTML = '<p>' + eddSlReleases.noReleases + '</p>';
+    if (!response.releases || response.releases.length === 0) {
+      if (noReleases) {
+        noReleases.classList.remove('hidden');
+      }
     } else {
-      wrapper.innerHTML = response.releases.map(buildReleaseMarkup).join('');
+      listReleases.innerHTML = response.releases.map(buildReleaseMarkup).join('');
+      listReleases.classList.remove('hidden');
     }
   })["catch"](function (error) {
     console.log('Error fetching releases', error);
     error.json().then(function (response) {
-      wrapper.innerText = (0,_utils_errors__WEBPACK_IMPORTED_MODULE_1__.parseErrorMessage)(response);
+      var errorWrap = document.getElementById('edd-sl-releases-errors');
+
+      if (errorWrap) {
+        errorWrap.innerText = (0,_utils_errors__WEBPACK_IMPORTED_MODULE_1__.parseErrorMessage)(response);
+        errorWrap.classList.remove('hidden');
+      }
     });
+  })["finally"](function () {
+    if (loading) {
+      loading.classList.add('hidden');
+    }
   });
 }
 
 function buildReleaseMarkup(release) {
-  var preRelease = '';
+  var releaseType = '';
 
   if (release.pre_release) {
-    preRelease = "<span class=\"edd-sl-releases--pre-release\">".concat(eddSlReleases.preRelease, "</span>");
+    releaseType = "<span class=\"edd-sl-releases--release--pre-release\">".concat(eddSlReleases.preRelease, "</span>");
+  } else {
+    releaseType = "<span class=\"edd-sl-releases--release--stable\">".concat(eddSlReleases.stableRelease, "</span>");
   }
 
-  return "\n<div class=\"edd-sl-releases--release\" data-id=\"".concat(release.id, "\">\n    <div class=\"edd-sl-releases--release--header\">\n        <h4>\n            ").concat(release.version, "\n            ").concat(preRelease, "\n        </h4>\n        <span class=\"edd-sl-releases--release--date\">\n            ").concat(release.created_at_display, "\n        </span>    \n    </div>\n    <div class=\"edd-sl-releases--release--body\">\n        <div class=\"edd-form-group edd-form-group__control\">\n            <label\n                for=\"release-").concat(release.id, "-changelog\"\n                class=\"edd-form-group__label\"\n            >").concat(eddSlReleases.changelog, "</label>\n            <textarea\n                id=\"release-").concat(release.id, "-changelog\"\n                rows=\"5\"\n            >").concat(release.changelog || '', "</textarea>\n        </div>\n    </div>\n</div>\n    ");
+  return "\n<div class=\"edd-sl-releases--release\" data-id=\"".concat(release.id, "\">\n    <div class=\"edd-sl-releases--release--header\">\n        <h4>\n            <span class=\"edd-sl-releases--release--version\">").concat(release.version, "</span>\n            ").concat(releaseType, "\n            <span class=\"edd-sl-releases--release--date\">\n                &ndash;\n                ").concat(release.released_at_display, "\n            </span>\n        </h4>\n        <div class=\"edd-sl-releases--release--actions\">\n            <a href=\"").concat(release.edit_url, "\" class=\"button button-secondary\">\n                ").concat(eddSlReleases.edit, "\n            </a>\n        </div>    \n    </div>\n</div>\n    ");
 }
 
 /***/ }),
@@ -145,6 +225,19 @@ function parseErrorMessage(error) {
 /*!***************************************!*\
   !*** ./assets/src/sass/frontend.scss ***!
   \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
+/***/ "./assets/src/sass/admin.scss":
+/*!************************************!*\
+  !*** ./assets/src/sass/admin.scss ***!
+  \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -253,6 +346,7 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
 /******/ 			"/assets/build/js/admin": 0,
+/******/ 			"assets/build/css/admin": 0,
 /******/ 			"assets/build/css/frontend": 0
 /******/ 		};
 /******/ 		
@@ -303,8 +397,9 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["assets/build/css/frontend"], () => (__webpack_require__("./assets/src/js/admin.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/build/css/frontend"], () => (__webpack_require__("./assets/src/sass/frontend.scss")))
+/******/ 	__webpack_require__.O(undefined, ["assets/build/css/admin","assets/build/css/frontend"], () => (__webpack_require__("./assets/src/js/admin.js")))
+/******/ 	__webpack_require__.O(undefined, ["assets/build/css/admin","assets/build/css/frontend"], () => (__webpack_require__("./assets/src/sass/frontend.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["assets/build/css/admin","assets/build/css/frontend"], () => (__webpack_require__("./assets/src/sass/admin.scss")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -79,7 +79,7 @@ class PublishRelease implements CliCommand
                 'changelog'    => wp_kses_post($release['body']),
                 'requirements' => null, // @todo
                 'pre_release'  => ! empty($release['prerelease']) ? 1 : 0,
-                'created_at'   => ! empty($release['published_at'])
+                'released_at'  => ! empty($release['published_at'])
                     ? date('Y-m-d H:i:s', strtotime($release['published_at']))
                     : gmdate('Y-m-d H:i:s'),
             ];

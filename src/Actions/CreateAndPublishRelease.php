@@ -14,6 +14,7 @@ use EddSlReleases\Exceptions\ModelNotFoundException;
 use EddSlReleases\Models\Release;
 use EddSlReleases\Repositories\ReleaseRepository;
 use EddSlReleases\Services\ReleaseFileProcessor;
+use EddSlReleases\ValueObjects\PreparedReleaseFile;
 
 class CreateAndPublishRelease
 {
@@ -50,6 +51,11 @@ class CreateAndPublishRelease
             $preparedFile = $this->releaseFileProcessor->executeFromUploadedFile(
                 'file_zip',
                 $args['file_name']
+            );
+        } elseif (! empty($args['file_attachment_id'])) {
+            $preparedFile = new PreparedReleaseFile(
+                get_attached_file($args['file_attachment_id']),
+                $args['file_attachment_id']
             );
         } else {
             throw new \InvalidArgumentException('Missing file_url or file_zip argument.', 400);

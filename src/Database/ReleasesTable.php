@@ -19,7 +19,7 @@ class ReleasesTable
     /**
      * @var string Current table version number.
      */
-    private string $version = '0.3';
+    private string $version = '0.5';
 
     protected \wpdb $wpdb;
 
@@ -68,9 +68,11 @@ class ReleasesTable
                 changelog longtext DEFAULT NULL,
                 requirements longtext DEFAULT NULL,
                 pre_release tinyint(1) UNSIGNED NOT NULL DEFAULT 0,
+                released_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 PRIMARY KEY (id),
-                KEY product_id_created_at_pre_release (product_id, created_at, pre_release)
+                KEY product_id_released_at_pre_release (product_id, released_at, pre_release)
             ) DEFAULT CHARACTER SET {$wpdb->charset} COLLATE {$wpdb->collate};"
         );
 

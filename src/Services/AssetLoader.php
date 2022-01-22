@@ -47,24 +47,34 @@ class AssetLoader
             true
         );
 
+        wp_register_style(
+            'edd-sl-releases',
+            $this->assetUrl('assets/build/css/admin.css'),
+            [],
+            Plugin::VERSION
+        );
+
         if ($this->shouldEnqueueAdmin()) {
             wp_enqueue_script('edd-sl-releases');
             wp_localize_script(
                 'edd-sl-releases',
                 'eddSlReleases',
                 [
-                    'restBase'        => rest_url(RestRoute::NAMESPACE.'/v1/'),
-                    'restNonce'       => wp_create_nonce('wp_rest'),
-                    'changelog'       => esc_html__('Changelog', 'edd-sl-releases'),
-                    'defaultError'    => esc_html__(
+                    'restBase'          => rest_url(RestRoute::NAMESPACE.'/v1/'),
+                    'restNonce'         => wp_create_nonce('wp_rest'),
+                    'changelog'         => esc_html__('Changelog', 'edd-sl-releases'),
+                    'defaultError'      => esc_html__(
                         'An unexpected error has occurred. Please try again.',
                         'edd-sl-releases'
                     ),
-                    'loadingReleases' => esc_html__('Loading releases...', 'edd-sl-releases'),
-                    'noReleases'      => esc_html__('No releases yet.', 'edd-sl-releases'),
-                    'preRelease'      => esc_html__('Pre Release', 'edd-sl-releases'),
+                    'edit'              => esc_html__('Edit', 'edd-sl-releases'),
+                    'uploadReleaseFile' => esc_html__('Upload or Select a Release File', 'edd-sl-releases'),
+                    'selectFile'        => esc_html__('Select File', 'edd-sl-releases'),
+                    'preRelease'        => esc_html__('Pre-release', 'edd-sl-releases'),
+                    'stableRelease'     => esc_html__('Stable', 'edd-sl-releases'),
                 ]
             );
+            wp_enqueue_style('edd-sl-releases');
         }
     }
 
@@ -99,7 +109,16 @@ class AssetLoader
             return false;
         }
 
-        return edd_is_admin_page('download', 'edit') || edd_is_admin_page('download', 'new');
+        if (edd_is_admin_page('download', 'edit') || edd_is_admin_page('download', 'new')) {
+            return true;
+        }
+
+        $screen = get_current_screen();
+        if (! $screen instanceof \WP_Screen) {
+            return false;
+        }
+
+        return $screen->id === 'download_page_edd-sl-releases';
     }
 
     /**

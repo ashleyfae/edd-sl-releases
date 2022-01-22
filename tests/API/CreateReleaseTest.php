@@ -48,7 +48,7 @@ class CreateReleaseTest extends ApiTestCase
     }
 
     /**
-     * @covers \EddSlReleases\API\v1\CreateRelease::permissionCheck
+     * @covers \EddSlReleases\API\v1\CreateRelease::restPermissionCheck
      */
     public function test_unauthenticated_request_returns_401()
     {
@@ -65,7 +65,7 @@ class CreateReleaseTest extends ApiTestCase
     }
 
     /**
-     * @covers \EddSlReleases\API\v1\CreateRelease::permissionCheck
+     * @covers \EddSlReleases\API\v1\CreateRelease::restPermissionCheck
      * @covers \EddSlReleases\API\v1\CreateRelease::handle
      */
     public function test_valid_args_with_file_url_creates_new_release()

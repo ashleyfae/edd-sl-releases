@@ -22,16 +22,19 @@ class ReleaseTest extends TestCase
     public function test_to_array_returns_public_properties()
     {
         $args = [
-            'id'                 => 1,
-            'product_id'         => 123,
-            'version'            => '1.0',
-            'file_attachment_id' => 1,
-            'file_path'          => '/var/www/releaes-1.0.zip',
-            'file_name'          => 'release-1.0.zip',
-            'changelog'          => null,
-            'requirements'       => null,
-            'pre_release'        => false,
-            'created_at'         => '2021-11-13 12:23:00',
+            'id'                  => 1,
+            'product_id'          => 123,
+            'version'             => '1.0',
+            'file_attachment_id'  => 1,
+            'file_path'           => '/var/www/release-1.0.zip',
+            'file_name'           => 'release-1.0.zip',
+            'changelog'           => null,
+            'requirements'        => null,
+            'pre_release'         => false,
+            'released_at'         => '2021-11-13 12:23:00',
+            'created_at'          => '2021-11-13 12:23:00',
+            'updated_at'          => '2021-11-13 12:23:00',
+            'released_at_display' => 'November 13, 2021, 12:23 pm',
         ];
 
         $release = new Release($args);
