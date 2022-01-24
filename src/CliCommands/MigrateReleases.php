@@ -47,10 +47,10 @@ class MigrateReleases implements CliCommand
         $this->productMigrator->setProductIds(
             $this->releaseRepository->getProductIdsWithReleases()
         )
-            ->dryRun(! empty($args['dry-run']));
+            ->dryRun(! empty($assocArgs['dry-run']));
 
-        if (! empty($args['product'])) {
-            $this->migrateProduct((int) $args['product']);
+        if (! empty($assocArgs['product'])) {
+            $this->migrateProduct((int) $assocArgs['product']);
         } else {
             $this->migrateProducts();
         }
@@ -129,6 +129,7 @@ class MigrateReleases implements CliCommand
 
         foreach ($productIds as $productId) {
             $this->migrateProduct((int) $productId);
+            \WP_CLI::line();
         }
     }
 }

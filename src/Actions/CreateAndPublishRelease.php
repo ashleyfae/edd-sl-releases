@@ -73,7 +73,10 @@ class CreateAndPublishRelease
                 $args['file_attachment_id']
             );
         } else {
-            throw new \InvalidArgumentException('Missing file_url or file_zip argument.', 400);
+            throw new \InvalidArgumentException(sprintf(
+                'You must provide one of the following parameters: %s',
+                json_encode(['file_url', 'file_zip', 'file_attachment_id'])
+            ), 400);
         }
 
         $newRelease = $this->releaseRepository->insert(
