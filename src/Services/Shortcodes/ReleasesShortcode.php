@@ -71,6 +71,15 @@ class ReleasesShortcode implements ShortcodeInterface
 
     protected function listReleasesForProduct(): void
     {
+        /*
+         * This is commented out for now because I can't yet decide if I want it. It is set up so that
+         * if a user doesn't have an active license key then they can't _download_ the release. But right now
+         * they can still view it if they try. :shrug:
+         */
+        /*if (! $this->productsRepository->hasActiveLicenseForProduct(get_current_user_id(), $this->getQueriedProductId())) {
+            $this->viewLoader->loadView('releases-shortcode/no-permission.php');
+        }*/
+
         $this->viewLoader->loadView('releases-shortcode/releases.php', [
             'releases' => $this->releaseRepository->listForProduct($this->getQueriedProductId())
         ]);

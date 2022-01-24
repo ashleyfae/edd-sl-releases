@@ -22,6 +22,10 @@ trait SanitizesRequirements
             ? array_intersect_key((array) $requirements, edd_sl_get_platforms())
             : null;
 
+        if (is_array($value)) {
+            $value = array_filter($value);
+        }
+
         return $value ? : null;
     }
 

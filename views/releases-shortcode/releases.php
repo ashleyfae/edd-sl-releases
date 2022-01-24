@@ -14,6 +14,14 @@ use EddSlReleases\ValueObjects;
 $buttonColour = edd_get_option('checkout_color', 'blue');
 $buttonColour = ($buttonColour === 'inherit') ? '' : $buttonColour;
 
+?>
+<p class="edd-sl-releases--back">
+    <a href="<?php echo esc_url(remove_query_arg('edd-sl-product')); ?>">
+        <?php echo '&laquo; '.esc_html__('Back to downloads', 'edd-sl-releases'); ?>
+    </a>
+</p>
+<?php
+
 if ($releases) {
     ?>
     <div class="edd-sl-releases--release-list">
@@ -68,5 +76,11 @@ if ($releases) {
     </div>
     <?php
 } else {
-
+    ?>
+    <div id="edd-sl-releases-no-releases">
+        <p>
+            <?php esc_html_e('No releases yet.', 'edd-sl-downloads'); ?>
+        </p>
+    </div>
+    <?php
 }
