@@ -5,6 +5,7 @@
  * @package   edd-sl-releases
  * @copyright Copyright (c) 2022, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 namespace EddSlReleases\Services\Shortcodes;
@@ -16,6 +17,9 @@ use JetBrains\PhpStorm\Pure;
 
 class ReleasesShortcode implements ShortcodeInterface
 {
+    /**
+     * @var array Shortcode arguments.
+     */
     protected array $args = [];
 
     public function __construct(
@@ -26,11 +30,17 @@ class ReleasesShortcode implements ShortcodeInterface
 
     }
 
+    /**
+     * @inheritDoc
+     */
     public static function tag(): string
     {
         return 'edd-sl-releases';
     }
 
+    /**
+     * @inheritDoc
+     */
     public function render(array $args, mixed $content = null): string
     {
         // @todo login form?
@@ -51,11 +61,25 @@ class ReleasesShortcode implements ShortcodeInterface
         return ob_get_clean();
     }
 
+    /**
+     * Whether we're viewing the releases for an individual product.
+     *
+     * @since 1.0
+     *
+     * @return bool
+     */
     protected function isProductView(): bool
     {
         return ! empty($this->getQueriedProductId());
     }
 
+    /**
+     * Returns the ID of the product being queried, or `null` if none.
+     *
+     * @since 1.0
+     *
+     * @return int|null
+     */
     protected function getQueriedProductId(): ?int
     {
         if (is_numeric($this->args['product'] ?? null)) {
@@ -69,6 +93,15 @@ class ReleasesShortcode implements ShortcodeInterface
         return null;
     }
 
+    /**
+     * Lists the releases for a product.
+     *
+     * @todo Pagination. Right now only shows 10 latest and that's it.
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     protected function listReleasesForProduct(): void
     {
         /*
@@ -85,6 +118,13 @@ class ReleasesShortcode implements ShortcodeInterface
         ]);
     }
 
+    /**
+     * Lists all the (distinct) products a user has purchased that have licensing enabled.
+     *
+     * @since 1.0
+     *
+     * @return void
+     */
     protected function listPurchasedProducts(): void
     {
         $products = $this->productsRepository->getLicensedProducts(get_current_user_id());
