@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-22T14:17:25+00:00\n"
+"POT-Creation-Date: 2022-01-24T16:20:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: edd-sl-releases\n"
@@ -83,6 +83,20 @@ msgstr ""
 msgid "An unexpected error occurred."
 msgstr ""
 
+#. Translators: %d ID of the product
+#: src/Actions/Migrations/MigrateProduct.php:77
+msgid "Product #%d already has releases."
+msgstr ""
+
+#: src/Actions/Migrations/MigrateProduct.php:84
+msgid "Licensing is not enabled for product #%d."
+msgstr ""
+
+#. Translators: %s file key; %d ID of the product
+#: src/Actions/Migrations/MigrateProduct.php:93
+msgid "File key %s not found in files array for product #%d."
+msgstr ""
+
 #: src/Admin/AdminPage.php:31
 #: src/Admin/AdminPage.php:32
 msgid "Release"
@@ -106,9 +120,24 @@ msgstr ""
 msgid "Invalid requirement platforms: %1$s. Only the following are allowed: %2$s."
 msgstr ""
 
+#: src/CliCommands/MigrateReleases.php:73
 #: src/CliCommands/PublishRelease.php:51
 #: src/CliCommands/SyncProductReleases.php:42
 msgid "Invalid product."
+msgstr ""
+
+#. Translators: %d ID of the product; %s name of the product
+#: src/CliCommands/MigrateReleases.php:78
+msgid "---- Migrating product #%d (%s)"
+msgstr ""
+
+#. Translators: %d ID of the release
+#: src/CliCommands/MigrateReleases.php:88
+msgid "Created release #%d."
+msgstr ""
+
+#: src/CliCommands/MigrateReleases.php:123
+msgid "Found 1 product to migrate."
 msgstr ""
 
 #. Translators: %s name of the product
@@ -205,6 +234,7 @@ msgid "Version"
 msgstr ""
 
 #: views/admin/release.php:56
+#: views/releases-shortcode/releases.php:38
 msgid "Pre Release"
 msgstr ""
 
@@ -254,11 +284,15 @@ msgstr ""
 msgid "Previous releases"
 msgstr ""
 
+#: views/releases-shortcode/releases.php:20
+msgid "Back to downloads"
+msgstr ""
+
 #. Translators: %s date of the release
-#: views/releases-shortcode/releases.php:29
+#: views/releases-shortcode/releases.php:46
 msgid "Released on %s"
 msgstr ""
 
-#: views/releases-shortcode/releases.php:56
+#: views/releases-shortcode/releases.php:73
 msgid "Download"
 msgstr ""

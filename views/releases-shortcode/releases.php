@@ -29,7 +29,16 @@ if ($releases) {
             <div class="edd-sl-releases-release">
                 <div class="edd-sl-releases-release--header">
                     <div>
-                        <h2><?php echo esc_html($release->version); ?></h2>
+                        <h2>
+                            <span class="edd-sl-releases-release--version">
+                                <?php echo esc_html($release->version); ?>
+                            </span>
+                            <?php if ($release->pre_release) : ?>
+                            <span class="edd-sl-releases-badge edd-sl-releases-badge--pre-release">
+                                <?php esc_html_e('Pre Release', 'edd-sl-releases'); ?>
+                            </span>
+                            <?php endif; ?>
+                        </h2>
                         <div class="edd-sl-releases-release--date">
                             <?php
                             echo esc_html(sprintf(

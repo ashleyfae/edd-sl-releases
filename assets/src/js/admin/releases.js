@@ -50,9 +50,9 @@ export function renderProductReleases() {
 function buildReleaseMarkup( release ) {
     let releaseType = '';
     if ( release.pre_release ) {
-        releaseType = `<span class="edd-sl-releases--release--pre-release">${eddSlReleases.preRelease}</span>`;
+        releaseType = `<span class="edd-sl-releases-badge edd-sl-releases-badge--pre-release">${eddSlReleases.preRelease}</span>`;
     } else {
-        releaseType = `<span class="edd-sl-releases--release--stable">${eddSlReleases.stableRelease}</span>`;
+        releaseType = `<span class="edd-sl-releases-badge edd-sl-releases-badge--stable">${eddSlReleases.stableRelease}</span>`;
     }
 
     return `

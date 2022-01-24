@@ -1,3 +1,5 @@
+@import 'common/badges';
+
 #edd-sl-releases-list {
     margin: 1rem 0;
 
@@ -13,27 +15,6 @@
 
         h4 {
             margin: 0;
-        }
-
-        &--pre-release,
-        &--stable {
-            border-radius: 6px;
-            display: inline-block;
-            font: {
-                weight: normal;
-            }
-            line-height: 1.5em;
-            margin: 0 .25rem;
-            padding: 0.15rem 0.5rem;
-        }
-
-        &--pre-release {
-            background: #f9f3e5;
-            color: #7d4c01;
-        }
-        &--stable {
-            background: #e5f5f0;
-            color: #017d5c;
         }
 
         &--date {
