@@ -14,6 +14,6 @@ interface CliCommand
 
     public static function commandName(): string;
 
-    public function __invoke(array $assocArgs, array $args): void;
+    public function __invoke(array $args, array $assocArgs): void;
 
 }

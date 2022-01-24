@@ -5,6 +5,7 @@
  * @package   edd-sl-releases
  * @copyright Copyright (c) 2021, Ashley Gibson
  * @license   GPL2+
+ * @since     1.0
  */
 
 namespace EddSlReleases\Repositories;
@@ -26,6 +27,17 @@ class ReleaseRepository
         $this->wpdb          = $wpdb;
     }
 
+    /**
+     * Retrieves the latest stable or pre-release for a given product.
+     *
+     * @since 1.0
+     *
+     * @param  int  $productId
+     * @param  bool  $preRelease
+     *
+     * @return Release
+     * @throws ModelNotFoundException
+     */
     public function getLatest(int $productId, bool $preRelease = false): Release
     {
         $cacheKey = $preRelease ? 'latest_pre_release_' : 'latest_stable_release_';
@@ -59,6 +71,8 @@ class ReleaseRepository
     /**
      * Returns the latest stable release.
      *
+     * @since 1.0
+     *
      * @param  int  $productId
      *
      * @return Release
@@ -72,6 +86,8 @@ class ReleaseRepository
     /**
      * Returns the latest pre-release.
      *
+     * @since 1.0
+     *
      * @param  int  $productId
      *
      * @return Release
@@ -83,6 +99,10 @@ class ReleaseRepository
     }
 
     /**
+     * Inserts a new release.
+     *
+     * @since 1.0
+     *
      * @param  array  $data
      *
      * @return Release
@@ -166,6 +186,8 @@ class ReleaseRepository
     /**
      * Updates an existing release.
      *
+     * @since 1.0
+     *
      * @param  Release  $release
      *
      * @return void
@@ -204,6 +226,10 @@ class ReleaseRepository
     }
 
     /**
+     * Retrieves a single release by its ID.
+     *
+     * @since 1.0
+     *
      * @throws ModelNotFoundException
      */
     public function getById(int $releaseId): Release
@@ -222,6 +248,8 @@ class ReleaseRepository
 
     /**
      * Lists the releases for a given product.
+     *
+     * @since 1.0
      *
      * @param  int  $productId
      * @param  bool|null  $preReleases
@@ -259,6 +287,16 @@ class ReleaseRepository
         return $results;
     }
 
+    /**
+     * Counts the number of releases a product has.
+     *
+     * @since 1.0
+     *
+     * @param  int  $productId
+     * @param  bool|null  $preReleases
+     *
+     * @return int
+     */
     public function countForProduct(int $productId, ?bool $preReleases = null): int
     {
         $preReleasesSql = '';
@@ -274,6 +312,17 @@ class ReleaseRepository
         return (int) $count;
     }
 
+    /**
+     * Returns a Release for a given product ID + version combination.
+     *
+     * @since 1.0
+     *
+     * @param  int  $productId
+     * @param  string  $version
+     *
+     * @return Release
+     * @throws ModelNotFoundException
+     */
     public function getByProductVersion(int $productId, string $version): Release
     {
         $release = $this->wpdb->get_row($this->wpdb->prepare(
@@ -289,6 +338,22 @@ class ReleaseRepository
         }
 
         return new Release($release);
+    }
+
+    /**
+     * Returns the IDs of all products that have releases.
+     *
+     * @since 1.0
+     *
+     * @return int[]
+     */
+    public function getProductIdsWithReleases(): array
+    {
+        $ids = $this->wpdb->get_col(
+            "SELECT DISTINCT product_id FROM {$this->releasesTable->tableName}"
+        );
+
+        return array_map('intval', $ids);
     }
 
 }

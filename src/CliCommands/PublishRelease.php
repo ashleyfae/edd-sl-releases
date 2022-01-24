@@ -40,12 +40,12 @@ class PublishRelease implements CliCommand
      * [--tag=<tag>]
      * : Name of the tag. If omitted, most recent release is used.
      *
-     * @param  array  $assocArgs
      * @param  array  $args
+     * @param  array  $assocArgs
      */
-    public function __invoke(array $assocArgs, array $args): void
+    public function __invoke(array $args, array $assocArgs): void
     {
-        $product = new \EDD_SL_Download($assocArgs[0]);
+        $product = new \EDD_SL_Download($args[0]);
 
         if (! $product->ID) {
             \WP_CLI::error(__('Invalid product.', 'edd-sl-releases'));
@@ -55,10 +55,10 @@ class PublishRelease implements CliCommand
         \WP_CLI::confirm(sprintf(__('Is this the correct product? %s', 'edd-sl-releases'), $product->post_title));
 
         try {
-            if (! empty($args['tag'])) {
-                $release = $this->gitHubApi->getReleaseByTag($assocArgs[1], $args['tag']);
+            if (! empty($assocArgs['tag'])) {
+                $release = $this->gitHubApi->getReleaseByTag($args[1], $assocArgs['tag']);
             } else {
-                $release = $this->gitHubApi->getLatestRelease($assocArgs[1]);
+                $release = $this->gitHubApi->getLatestRelease($args[1]);
             }
 
             if (empty($release['assets'][0])) {

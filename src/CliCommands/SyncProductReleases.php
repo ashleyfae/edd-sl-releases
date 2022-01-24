@@ -32,12 +32,12 @@ class SyncProductReleases implements CliCommand
      * <product_id>
      * : ID of the EDD product sync.
      *
-     * @param  array  $assocArgs
      * @param  array  $args
+     * @param  array  $assocArgs
      */
-    public function __invoke(array $assocArgs, array $args): void
+    public function __invoke(array $args, array $assocArgs): void
     {
-        $product = new \EDD_SL_Download($assocArgs[0] ?? 0);
+        $product = new \EDD_SL_Download($args[0] ?? 0);
         if (! $product->ID) {
             \WP_CLI::error(__('Invalid product.', 'edd-sl-releases'));
         }

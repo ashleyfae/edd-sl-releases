@@ -17,6 +17,7 @@ class CliServiceProvider implements ServiceProvider
     protected array $commands = [
         CliCommands\PublishRelease::class,
         CliCommands\SyncProductReleases::class,
+        CliCommands\MigrateReleases::class,
     ];
 
     public function register(): void

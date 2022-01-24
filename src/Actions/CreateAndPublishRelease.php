@@ -18,6 +18,7 @@ use EddSlReleases\ValueObjects\PreparedReleaseFile;
 
 class CreateAndPublishRelease
 {
+    protected bool $withEvents = true;
 
     public function __construct(
         protected ReleaseFileProcessor $releaseFileProcessor,
@@ -25,6 +26,20 @@ class CreateAndPublishRelease
         protected SyncSoftwareLicensingReleases $productSyncer
     ) {
 
+    }
+
+    /**
+     * Disables post-insert product syncing.
+     *
+     * @since 1.0
+     *
+     * @return $this
+     */
+    public function withoutEvents(): static
+    {
+        $this->withEvents = false;
+
+        return $this;
     }
 
     /**
@@ -65,7 +80,9 @@ class CreateAndPublishRelease
             wp_parse_args($preparedFile->toArray(), $args)
         );
 
-        $this->productSyncer->execute($newRelease->product_id);
+        if ($this->withEvents) {
+            $this->productSyncer->execute($newRelease->product_id);
+        }
 
         return $newRelease;
     }
