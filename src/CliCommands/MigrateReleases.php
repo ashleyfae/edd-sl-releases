@@ -86,7 +86,7 @@ class MigrateReleases implements CliCommand
                 \WP_CLI::line(sprintf(
                 /* Translators: %d ID of the release */
                     __('Created release #%d.', 'edd-sl-releases'),
-                    $product->ID
+                    $release->id
                 ));
             } elseif ($this->productMigrator->dryRun) {
                 \WP_CLI::line(sprintf(
