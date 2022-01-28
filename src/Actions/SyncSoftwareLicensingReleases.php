@@ -29,11 +29,13 @@ class SyncSoftwareLicensingReleases
     {
         edd_debug_log(sprintf('Updating SL release data for product #%d.', $productId));
 
+        $product = new \EDD_SL_Download($productId);
+
         try {
             $this->latestStable = $this->releaseRepository->getLatestStableRelease($productId);
 
             $this->updateSlVersion($this->latestStable);
-            $this->updateProductDownloads($this->latestStable);
+            $this->updateProductDownloads($this->latestStable, $product);
         } catch (ModelNotFoundException $e) {
             edd_debug_log('No latest stable release found.');
         }
@@ -42,7 +44,7 @@ class SyncSoftwareLicensingReleases
             $this->latestPreRelease = $this->releaseRepository->getLatestPreRelease($productId);
 
             $this->updateSlVersion($this->latestPreRelease);
-            $this->updateProductDownloads($this->latestPreRelease);
+            $this->updateProductDownloads($this->latestPreRelease, $product);
         } catch (ModelNotFoundException $e) {
             edd_debug_log('No latest pre release found.');
         }
@@ -97,22 +99,31 @@ class SyncSoftwareLicensingReleases
      * Updates the product's download file.
      *
      * @param  Release  $release
+     * @param  \EDD_SL_Download  $product
      *
      * @return void
      */
-    protected function updateProductDownloads(Release $release): void
+    protected function updateProductDownloads(Release $release, \EDD_SL_Download $product): void
     {
-        $metaKey = $release->pre_release ? '_edd_sl_beta_files' : 'edd_download_files';
+        $metaKey       = $release->pre_release ? '_edd_sl_beta_files' : 'edd_download_files';
+        $existingFiles = $release->pre_release ? $product->get_beta_files() : $product->get_files();
+        $fileIndex     = $release->pre_release ? $product->get_beta_upgrade_file_key() : $product->get_upgrade_file_key();
 
-        update_post_meta($release->product_id, $metaKey, [
+        if ($fileIndex === false || ! array_key_exists($fileIndex, $existingFiles)) {
+            $fileIndex = count($existingFiles) ? max(array_keys($existingFiles)) + 1 : 0;
+        }
+
+        $existingFiles[$fileIndex] = [
             [
-                'index'         => 0,
+                'index'         => $fileIndex,
                 'name'          => $release->file_name,
                 'file'          => $release->getProtectedFileUrl(),
                 'condition'     => 'all',
                 'attachment_id' => $release->file_attachment_id,
             ]
-        ]);
+        ];
+
+        update_post_meta($release->product_id, $metaKey, $existingFiles);
     }
 
 }
