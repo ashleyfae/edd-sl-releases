@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the EDD Software Licensing Releases plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: EDD Software Licensing Releases 0.4\n"
+"Project-Id-Version: EDD Software Licensing Releases 0.5\n"
 "Report-Msgid-Bugs-To: https://github.com/ashleyfae/edd-sl-releases/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-24T16:20:31+00:00\n"
+"POT-Creation-Date: 2022-01-28T10:15:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: edd-sl-releases\n"
@@ -84,16 +84,16 @@ msgid "An unexpected error occurred."
 msgstr ""
 
 #. Translators: %d ID of the product
-#: src/Actions/Migrations/MigrateProduct.php:77
+#: src/Actions/Migrations/MigrateProduct.php:117
 msgid "Product #%d already has releases."
 msgstr ""
 
-#: src/Actions/Migrations/MigrateProduct.php:84
+#: src/Actions/Migrations/MigrateProduct.php:124
 msgid "Licensing is not enabled for product #%d."
 msgstr ""
 
 #. Translators: %s file key; %d ID of the product
-#: src/Actions/Migrations/MigrateProduct.php:93
+#: src/Actions/Migrations/MigrateProduct.php:132
 msgid "File key %s not found in files array for product #%d."
 msgstr ""
 
@@ -120,23 +120,32 @@ msgstr ""
 msgid "Invalid requirement platforms: %1$s. Only the following are allowed: %2$s."
 msgstr ""
 
-#: src/CliCommands/MigrateReleases.php:73
+#: src/CliCommands/MigrateReleases.php:59
+msgid "Failures:"
+msgstr ""
+
+#. Translators: %d ID of the product; %s error message
+#: src/CliCommands/MigrateReleases.php:63
+msgid "Product %d: %s"
+msgstr ""
+
+#: src/CliCommands/MigrateReleases.php:86
 #: src/CliCommands/PublishRelease.php:51
 #: src/CliCommands/SyncProductReleases.php:42
 msgid "Invalid product."
 msgstr ""
 
 #. Translators: %d ID of the product; %s name of the product
-#: src/CliCommands/MigrateReleases.php:78
+#: src/CliCommands/MigrateReleases.php:91
 msgid "---- Migrating product #%d (%s)"
 msgstr ""
 
 #. Translators: %d ID of the release
-#: src/CliCommands/MigrateReleases.php:88
+#: src/CliCommands/MigrateReleases.php:101
 msgid "Created release #%d."
 msgstr ""
 
-#: src/CliCommands/MigrateReleases.php:123
+#: src/CliCommands/MigrateReleases.php:137
 msgid "Found 1 product to migrate."
 msgstr ""
 
