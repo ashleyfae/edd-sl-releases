@@ -25,10 +25,17 @@ tests_add_filter('muplugins_loaded', function () {
     }
 
     // Load SL
-    if (file_exists('/tmp/wordpress/wp-content/plugins/EDD-Software-Licensing/edd-software-licenses.php')) {
-        require '/tmp/wordpress/wp-content/plugins/EDD-Software-Licensing/edd-software-licenses.php';
-    } else {
-        require dirname(__FILE__).'/../../EDD-Software-Licensing/edd-software-licenses.php';
+    $files = [
+        '/tmp/wordpress/wp-content/plugins/EDD-Software-Licensing/edd-software-licenses.php',
+        dirname(__FILE__).'/../../EDD-Software-Licensing/edd-software-licenses.php',
+        dirname(__FILE__).'/../../edd-software-licensing/edd-software-licenses.php',
+    ];
+
+    foreach($files as $file) {
+        if (file_exists($file)) {
+            require $file;
+            break;
+        }
     }
 
     require dirname(__FILE__).'/../edd-sl-releases.php';

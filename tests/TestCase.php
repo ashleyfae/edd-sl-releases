@@ -11,6 +11,9 @@ namespace EddSlReleases\Tests;
 
 use EddSlReleases\Database\ReleasesTable;
 
+/**
+ * @mixin \PHPUnit\Framework\TestCase
+ */
 abstract class TestCase extends \WP_UnitTestCase
 {
     public function set_up()

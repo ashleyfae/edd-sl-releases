@@ -70,31 +70,9 @@ class MigrateProduct
     {
         $this->stableArgs = [];
         $this->betaArgs   = [];
+        $file             = $product->get_files()[$product->get_upgrade_file_key()] ?? null;
 
-        if (in_array($product->ID, $this->productIdsWithReleases)) {
-            throw new \Exception(sprintf(
-            /* Translators: %d ID of the product */
-                __('Product #%d already has releases.', 'edd-sl-releases'),
-                $product->ID
-            ));
-        }
-
-        if (! $product->licensing_enabled()) {
-            throw new \Exception(sprintf(
-                __('Licensing is not enabled for product #%d.', 'edd-sl-releases'),
-                $product->ID
-            ));
-        }
-
-        $file = $product->get_files()[$product->get_upgrade_file_key()] ?? null;
-        if (is_null($file)) {
-            throw new \Exception(sprintf(
-            /* Translators: %s file key; %d ID of the product */
-                __('File key %s not found in files array for product #%d.', 'edd-sl-releases'),
-                $product->get_upgrade_file_key(),
-                $product->ID
-            ));
-        }
+        $this->validateMigration($product, $file);
 
         $stableRelease = null;
 
@@ -120,6 +98,45 @@ class MigrateProduct
     }
 
     /**
+     * Validates whether we should actually perform a migration. Exception is thrown
+     * if we should not.
+     *
+     * @since 1.0
+     *
+     * @param  \EDD_SL_Download  $product
+     * @param  array|null        $file
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected function validateMigration(\EDD_SL_Download $product, ?array $file): void
+    {
+        if (in_array($product->ID, $this->productIdsWithReleases)) {
+            throw new \Exception(sprintf(
+            /* Translators: %d ID of the product */
+                __('Product #%d already has releases.', 'edd-sl-releases'),
+                $product->ID
+            ));
+        }
+
+        if (! $product->licensing_enabled()) {
+            throw new \Exception(sprintf(
+                __('Licensing is not enabled for product #%d.', 'edd-sl-releases'),
+                $product->ID
+            ));
+        }
+
+        if (is_null($file)) {
+            throw new \Exception(sprintf(
+            /* Translators: %s file key; %d ID of the product */
+                __('File key %s not found in files array for product #%d.', 'edd-sl-releases'),
+                $product->get_upgrade_file_key(),
+                $product->ID
+            ));
+        }
+    }
+
+    /**
      * Migrates the beta release if there is one.
      *
      * @since 1.0
@@ -136,6 +153,7 @@ class MigrateProduct
                 'file_name'          => $betaFile['name'] ?? null,
                 'changelog'          => $product->get_beta_changelog(),
                 'requirements'       => $product->get_requirements(),
+                'pre_release'        => true,
                 'released_at'        => $product->post_modified_gmt,
             ];
 

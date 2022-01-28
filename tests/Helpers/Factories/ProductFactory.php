@@ -23,11 +23,7 @@ class ProductFactory
             '_variable_pricing'              => 0,
             'edd_variable_prices'            => false,
             'edd_download_files'             => [
-                [
-                    'name'      => 'Simple File 1',
-                    'file'      => 'http://localhost/simple-file1.jpg',
-                    'condition' => 0,
-                ]
+                FileFactory::make()->toArray(),
             ],
             '_edd_download_limit'            => 20,
             '_edd_hide_purchase_link'        => 1,
@@ -39,13 +35,14 @@ class ProductFactory
             'edd_sku'                        => 'sku_0012',
             '_edd_sl_enabled'                => 1,
             '_edd_sl_limit'                  => 1,
-            '_edd_sl_version'                => 1,
+            '_edd_sl_version'                => '1.0',
             '_edd_sl_changelog'              => 'Test Before More <!--more--> test After More',
             'edd_sl_download_lifetime'       => 0,
             '_edd_sl_exp_unit'               => 'years',
             '_edd_sl_exp_length'             => 1,
             '_edd_sl_keys'                   => '',
             '_edd_sl_upgrade_paths'          => [],
+            '_edd_sl_upgrade_file_key'       => 0,
         ]);
 
         $postKeys = [
