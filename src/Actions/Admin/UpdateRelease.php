@@ -47,6 +47,7 @@ class UpdateRelease
             $release->setUp([
                 'version'            => sanitize_text_field($data['version']),
                 'file_attachment_id' => absint($data['file_attachment_id']),
+                'file_path'          => sanitize_text_field(get_attached_file(absint($data['file_attachment_id']))),
                 'file_name'          => sanitize_text_field($data['file_name']),
                 'changelog'          => ! empty($data['changelog']) ? wp_kses_post($data['changelog']) : null,
                 'requirements'       => $this->sanitizeRequirements($data['requirements'] ?? null),

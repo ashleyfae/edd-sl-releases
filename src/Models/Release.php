@@ -19,7 +19,7 @@ class Release
     public int $id;
     public int $product_id;
     public string $version;
-    public int $file_attachment_id;
+    public ?int $file_attachment_id = null;
     public string $file_path;
     public string $file_name;
     public ?string $changelog = null;
@@ -81,6 +81,27 @@ class Release
             'page'      => 'edd-sl-releases',
             'release'   => urlencode($this->id),
         ], admin_url('edit.php'));
+    }
+
+    /**
+     * Returns the URL to the "protected" file. This is not intended for customer use, as direct
+     * access is not allowed.
+     *
+     * @since 1.0
+     *
+     * @return string
+     */
+    public function getProtectedFileUrl(): string
+    {
+        if (! empty($this->file_attachment_id) && ($url = wp_get_attachment_url($this->file_attachment_id))) {
+            return $url;
+        }
+
+        return str_replace(
+            trailingslashit(ABSPATH),
+            trailingslashit(site_url()),
+            $this->file_path
+        );
     }
 
 }

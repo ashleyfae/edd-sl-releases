@@ -77,10 +77,6 @@ class DownloadReleaseFile
      */
     protected function processDownload(Release $release): void
     {
-        if (get_post_type($release->file_attachment_id) !== 'attachment') {
-            throw new FileDownloadException('This release does not have an attachment.');
-        }
-
         if (! file_exists($release->file_path)) {
             throw new FileDownloadException('This file does not exist.');
         }

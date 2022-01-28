@@ -171,7 +171,7 @@ class MigrateProduct
     }
 
     /**
-     * @throws FileProcessingException
+     * @throws FileProcessingException|\Exception
      */
     protected function getOrMakeFileAttachmentId(array $file, bool $preRelease = false): int
     {

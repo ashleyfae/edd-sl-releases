@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-28T10:15:48+00:00\n"
+"POT-Creation-Date: 2022-01-28T12:48:44+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: edd-sl-releases\n"
@@ -43,7 +43,7 @@ msgid "You do not have permission to perform this action."
 msgstr ""
 
 #: src/Actions/Admin/CreateRelease.php:51
-#: src/Actions/Admin/UpdateRelease.php:68
+#: src/Actions/Admin/UpdateRelease.php:69
 msgid "An unexpected error has occurred."
 msgstr ""
 
@@ -51,7 +51,7 @@ msgstr ""
 msgid "Missing release ID."
 msgstr ""
 
-#: src/Actions/Admin/UpdateRelease.php:64
+#: src/Actions/Admin/UpdateRelease.php:65
 msgid "Invalid release."
 msgstr ""
 
@@ -84,17 +84,21 @@ msgid "An unexpected error occurred."
 msgstr ""
 
 #. Translators: %d ID of the product
-#: src/Actions/Migrations/MigrateProduct.php:117
+#: src/Actions/Migrations/MigrateProduct.php:120
 msgid "Product #%d already has releases."
 msgstr ""
 
-#: src/Actions/Migrations/MigrateProduct.php:124
+#: src/Actions/Migrations/MigrateProduct.php:127
 msgid "Licensing is not enabled for product #%d."
 msgstr ""
 
 #. Translators: %s file key; %d ID of the product
-#: src/Actions/Migrations/MigrateProduct.php:132
+#: src/Actions/Migrations/MigrateProduct.php:135
 msgid "File key %s not found in files array for product #%d."
+msgstr ""
+
+#: src/Actions/Migrations/MigrateProduct.php:184
+msgid "No attachment ID in file. (Will attempt to create one in live run.)"
 msgstr ""
 
 #: src/Admin/AdminPage.php:31
@@ -120,28 +124,24 @@ msgstr ""
 msgid "Invalid requirement platforms: %1$s. Only the following are allowed: %2$s."
 msgstr ""
 
-#: src/CliCommands/MigrateReleases.php:59
-msgid "Failures:"
+#. Translators: %d number of failures
+#: src/CliCommands/MigrateReleases.php:62
+msgid "Completed with %1$d failures and %2$s successes."
 msgstr ""
 
-#. Translators: %d ID of the product; %s error message
-#: src/CliCommands/MigrateReleases.php:63
-msgid "Product %d: %s"
-msgstr ""
-
-#: src/CliCommands/MigrateReleases.php:86
+#: src/CliCommands/MigrateReleases.php:84
 #: src/CliCommands/PublishRelease.php:51
 #: src/CliCommands/SyncProductReleases.php:42
 msgid "Invalid product."
 msgstr ""
 
 #. Translators: %d ID of the product; %s name of the product
-#: src/CliCommands/MigrateReleases.php:91
+#: src/CliCommands/MigrateReleases.php:89
 msgid "---- Migrating product #%d (%s)"
 msgstr ""
 
 #. Translators: %d ID of the release
-#: src/CliCommands/MigrateReleases.php:101
+#: src/CliCommands/MigrateReleases.php:99
 msgid "Created release #%d."
 msgstr ""
 
@@ -183,7 +183,7 @@ msgid "n/a"
 msgstr ""
 
 #: src/Services/AssetLoader.php:65
-#: views/admin/release.php:133
+#: views/admin/release.php:139
 msgid "Changelog"
 msgstr ""
 
@@ -212,7 +212,7 @@ msgid "Stable"
 msgstr ""
 
 #. Translators: %s - list of missing fields
-#: src/Traits/ValidatesReleaseData.php:33
+#: src/Traits/ValidatesReleaseData.php:34
 msgid "Missing the following required fields: %s"
 msgstr ""
 
@@ -263,24 +263,24 @@ msgstr ""
 msgid "Download URL"
 msgstr ""
 
-#: views/admin/release.php:122
+#: views/admin/release.php:128
 msgid "Change File"
 msgstr ""
 
-#: views/admin/release.php:123
+#: views/admin/release.php:129
 msgid "Upload File"
 msgstr ""
 
-#: views/admin/release.php:152
+#: views/admin/release.php:158
 msgid "Requirements"
 msgstr ""
 
 #. Translators: %s platform name
-#: views/admin/release.php:164
+#: views/admin/release.php:170
 msgid "%s Version Required:"
 msgstr ""
 
-#: views/admin/release.php:187
+#: views/admin/release.php:193
 msgid "Release Date"
 msgstr ""
 

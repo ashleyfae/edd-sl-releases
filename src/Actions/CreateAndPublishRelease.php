@@ -72,10 +72,12 @@ class CreateAndPublishRelease
                 get_attached_file($args['file_attachment_id']),
                 $args['file_attachment_id']
             );
+        } elseif (! empty($args['file_path'])) {
+            $preparedFile = new PreparedReleaseFile($args['file_path']);
         } else {
             throw new \InvalidArgumentException(sprintf(
                 'You must provide one of the following parameters: %s',
-                json_encode(['file_url', 'file_zip', 'file_attachment_id'])
+                json_encode(['file_url', 'file_zip', 'file_attachment_id', 'file_path'])
             ), 400);
         }
 

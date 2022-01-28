@@ -19,7 +19,7 @@ class ReleasesTable
     /**
      * @var string Current table version number.
      */
-    private string $version = '0.5';
+    private string $version = '0.6';
 
     protected \wpdb $wpdb;
 
@@ -62,7 +62,7 @@ class ReleasesTable
                 id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
                 product_id bigint(20) UNSIGNED NOT NULL,
                 version varchar(20) NOT NULL,
-                file_attachment_id bigint(20) UNSIGNED NOT NULL,
+                file_attachment_id bigint(20) UNSIGNED DEFAULT NULL,
                 file_path longtext NOT NULL,
                 file_name longtext NOT NULL,
                 changelog longtext DEFAULT NULL,

@@ -108,7 +108,7 @@ class SyncSoftwareLicensingReleases
             [
                 'index'         => 0,
                 'name'          => $release->file_name,
-                'file'          => wp_get_attachment_url($release->file_attachment_id),
+                'file'          => $release->getProtectedFileUrl(),
                 'condition'     => 'all',
                 'attachment_id' => $release->file_attachment_id,
             ]

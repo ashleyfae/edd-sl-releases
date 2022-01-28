@@ -15,7 +15,7 @@ class PreparedReleaseFile
 {
     use Serializable;
 
-    public function __construct(public string $file_path, public int $file_attachment_id)
+    public function __construct(public string $file_path, public ?int $file_attachment_id = null)
     {
 
     }
