@@ -76,7 +76,7 @@ class MigrateProduct
         $this->betaArgs   = [];
         $file             = $this->product->get_files()[$this->product->get_upgrade_file_key()] ?? null;
 
-        $this->validateMigration($this->product, $file);
+        $this->validateMigration($file);
 
         $stableRelease = null;
 
@@ -96,7 +96,7 @@ class MigrateProduct
                 ->execute($this->stableArgs);
         }
 
-        $this->migrateBeta($this->product);
+        $this->migrateBeta();
 
         return $stableRelease;
     }
@@ -107,26 +107,25 @@ class MigrateProduct
      *
      * @since 1.0
      *
-     * @param  \EDD_SL_Download  $product
      * @param  array|null        $file
      *
      * @return void
      * @throws \Exception
      */
-    protected function validateMigration(\EDD_SL_Download $product, ?array $file): void
+    protected function validateMigration(?array $file): void
     {
-        if (in_array($product->ID, $this->productIdsWithReleases)) {
+        if (in_array($this->product->ID, $this->productIdsWithReleases)) {
             throw new \Exception(sprintf(
             /* Translators: %d ID of the product */
                 __('Product #%d already has releases.', 'edd-sl-releases'),
-                $product->ID
+                $this->product->ID
             ));
         }
 
-        if (! $product->licensing_enabled()) {
+        if (! $this->product->licensing_enabled()) {
             throw new \Exception(sprintf(
                 __('Licensing is not enabled for product #%d.', 'edd-sl-releases'),
-                $product->ID
+                $this->product->ID
             ));
         }
 
@@ -134,8 +133,8 @@ class MigrateProduct
             throw new \Exception(sprintf(
             /* Translators: %s file key; %d ID of the product */
                 __('File key %s not found in files array for product #%d.', 'edd-sl-releases'),
-                $product->get_upgrade_file_key(),
-                $product->ID
+                $this->product->get_upgrade_file_key(),
+                $this->product->ID
             ));
         }
     }
@@ -147,18 +146,18 @@ class MigrateProduct
      *
      * @throws ModelNotFoundException|FileProcessingException
      */
-    public function migrateBeta(\EDD_SL_Download $product): ?Release
+    public function migrateBeta(): ?Release
     {
-        if ($product->has_beta() && ($betaFile = $product->get_beta_files()[$product->get_beta_upgrade_file_key()] ?? null)) {
+        if ($this->product->has_beta() && ($betaFile = $this->product->get_beta_files()[$this->product->get_beta_upgrade_file_key()] ?? null)) {
             $this->betaArgs = [
-                'product_id'         => $product->ID,
-                'version'            => $product->get_beta_version(),
+                'product_id'         => $this->product->ID,
+                'version'            => $this->product->get_beta_version(),
                 'file_attachment_id' => $this->getOrMakeFileAttachmentId($betaFile, true),
                 'file_name'          => $betaFile['name'] ?? null,
-                'changelog'          => $product->get_beta_changelog(),
-                'requirements'       => $product->get_requirements(),
+                'changelog'          => $this->product->get_beta_changelog(),
+                'requirements'       => $this->product->get_requirements(),
                 'pre_release'        => true,
-                'released_at'        => $product->post_modified_gmt,
+                'released_at'        => $this->product->post_modified_gmt,
             ];
 
             if (! $this->dryRun) {
@@ -190,7 +189,8 @@ class MigrateProduct
 
         $file['attachment_id'] = $attachmentId;
 
-        $this->updateFiles($file, $preRelease);
+        // Don't know if I want to do this...
+        //$this->updateFiles($file, $preRelease);
 
         return $attachmentId;
     }
