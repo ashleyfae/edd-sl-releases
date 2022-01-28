@@ -84,7 +84,7 @@ class MigrateProduct
             'product_id'         => $this->product->ID,
             'version'            => $this->product->get_version(),
             'file_attachment_id' => $this->getOrMakeFileAttachmentId($file),
-            'file_name'          => $file['name'] ?? null,
+            'file_name'          => $this->getFileName($file, $this->product->get_version()),
             'changelog'          => $this->product->get_changelog(),
             'requirements'       => $this->product->get_requirements(),
             'released_at'        => $this->product->post_modified_gmt,
@@ -129,6 +129,13 @@ class MigrateProduct
             ));
         }
 
+        if ($this->product->is_bundled_download()) {
+            throw new \Exception(sprintf(
+                __('Product #%d is a bundle.', 'edd-sl-releases'),
+                $this->product->ID
+            ));
+        }
+
         if (is_null($file)) {
             throw new \Exception(sprintf(
             /* Translators: %s file key; %d ID of the product */
@@ -153,7 +160,7 @@ class MigrateProduct
                 'product_id'         => $this->product->ID,
                 'version'            => $this->product->get_beta_version(),
                 'file_attachment_id' => $this->getOrMakeFileAttachmentId($betaFile, true),
-                'file_name'          => $betaFile['name'] ?? null,
+                'file_name'          => $this->getFileName($betaFile, $this->product->get_beta_version()),
                 'changelog'          => $this->product->get_beta_changelog(),
                 'requirements'       => $this->product->get_requirements(),
                 'pre_release'        => true,
@@ -193,6 +200,33 @@ class MigrateProduct
         //$this->updateFiles($file, $preRelease);
 
         return $attachmentId;
+    }
+
+    /**
+     * Builds an acceptable file name for the release.
+     *
+     * @since 1.0
+     *
+     * @param  array  $file
+     * @param  string  $version
+     *
+     * @return string
+     */
+    protected function getFileName(array $file, string $version): string
+    {
+        if (! empty($file['name'])) {
+            return $file['name'];
+        }
+
+        if (! empty($file['file'])) {
+            return basename($file['file']);
+        }
+
+        return sprintf(
+            '%s-%s.zip',
+            $this->product->post_name,
+            $version
+        );
     }
 
     /**
