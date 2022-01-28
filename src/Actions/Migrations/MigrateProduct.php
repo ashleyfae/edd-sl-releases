@@ -20,9 +20,12 @@ class MigrateProduct
     public bool $dryRun = false;
     public array $stableArgs = [];
     public array $betaArgs = [];
+    protected \EDD_SL_Download $product;
 
-    public function __construct(protected CreateAndPublishRelease $releaseCreator)
-    {
+    public function __construct(
+        protected CreateAndPublishRelease $releaseCreator,
+        protected MakeFileAttachment $attachmentMaker
+    ) {
 
     }
 
@@ -68,22 +71,23 @@ class MigrateProduct
      */
     public function execute(\EDD_SL_Download $product): ?Release
     {
+        $this->product    = $product;
         $this->stableArgs = [];
         $this->betaArgs   = [];
-        $file             = $product->get_files()[$product->get_upgrade_file_key()] ?? null;
+        $file             = $this->product->get_files()[$this->product->get_upgrade_file_key()] ?? null;
 
-        $this->validateMigration($product, $file);
+        $this->validateMigration($this->product, $file);
 
         $stableRelease = null;
 
         $this->stableArgs = [
-            'product_id'         => $product->ID,
-            'version'            => $product->get_version(),
-            'file_attachment_id' => $file['attachment_id'] ?? null,
+            'product_id'         => $this->product->ID,
+            'version'            => $this->product->get_version(),
+            'file_attachment_id' => $this->getOrMakeFileAttachmentId($file),
             'file_name'          => $file['name'] ?? null,
-            'changelog'          => $product->get_changelog(),
-            'requirements'       => $product->get_requirements(),
-            'released_at'        => $product->post_modified_gmt,
+            'changelog'          => $this->product->get_changelog(),
+            'requirements'       => $this->product->get_requirements(),
+            'released_at'        => $this->product->post_modified_gmt,
         ];
 
         if (! $this->dryRun) {
@@ -92,7 +96,7 @@ class MigrateProduct
                 ->execute($this->stableArgs);
         }
 
-        $this->migrateBeta($product);
+        $this->migrateBeta($this->product);
 
         return $stableRelease;
     }
@@ -149,7 +153,7 @@ class MigrateProduct
             $this->betaArgs = [
                 'product_id'         => $product->ID,
                 'version'            => $product->get_beta_version(),
-                'file_attachment_id' => $betaFile['attachment_id'] ?? null,
+                'file_attachment_id' => $this->getOrMakeFileAttachmentId($betaFile, true),
                 'file_name'          => $betaFile['name'] ?? null,
                 'changelog'          => $product->get_beta_changelog(),
                 'requirements'       => $product->get_requirements(),
@@ -165,6 +169,53 @@ class MigrateProduct
         }
 
         return null;
+    }
+
+    /**
+     * @throws FileProcessingException
+     */
+    protected function getOrMakeFileAttachmentId(array $file, bool $preRelease = false): int
+    {
+        if (! empty($file['attachment_id'])) {
+            return (int) $file['attachment_id'];
+        }
+
+        if ($this->dryRun) {
+            throw new \Exception(
+                __('No attachment ID in file. (Will attempt to create one in live run.)', 'edd-sl-releases')
+            );
+        }
+
+        $attachmentId = $this->attachmentMaker->createFromUrl($file);
+
+        $file['attachment_id'] = $attachmentId;
+
+        $this->updateFiles($file, $preRelease);
+
+        return $attachmentId;
+    }
+
+    /**
+     * Updates the attachment ID associated with a product.
+     * This is run if we ended up creating an attachment, so we don't continue to create them over
+     * and over with each run of the migration.
+     *
+     * @since 1.0
+     *
+     * @param  array  $file
+     * @param  bool  $preRelease
+     *
+     * @return void
+     */
+    protected function updateFiles(array $file, bool $preRelease = false): void
+    {
+        $files   = $preRelease ? $this->product->get_beta_files() : $this->product->get_files();
+        $fileKey = $preRelease ? $this->product->get_beta_upgrade_file_key() : $this->product->get_upgrade_file_key();
+        $metaKey = $preRelease ? '_edd_sl_beta_files' : 'edd_download_files';
+
+        $files[$fileKey] = $file;
+
+        update_post_meta($this->product->ID, $metaKey, $files);
     }
 
 }

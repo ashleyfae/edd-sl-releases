@@ -16,6 +16,7 @@ use EddSlReleases\Repositories\ReleaseRepository;
 class MigrateReleases implements CliCommand
 {
     protected array $errors = [];
+    protected int $numberSuccessful = 0;
 
     public function __construct(
         protected MigrateProduct $productMigrator,
@@ -56,15 +57,12 @@ class MigrateReleases implements CliCommand
             $this->migrateProducts();
 
             if (! empty($this->errors)) {
-                \WP_CLI::warning(__('Failures:', 'edd-sl-releases'));
-                foreach ($this->errors as $productId => $error) {
-                    \WP_CLI::warning(sprintf(
-                    /* Translators: %d ID of the product; %s error message */
-                        __('Product %d: %s', 'edd-sl-releases'),
-                        $productId,
-                        $error
-                    ));
-                }
+                \WP_CLI::warning(sprintf(
+                /* Translators: %d number of failures */
+                    __('Completed with %1$d failures and %2$s successes.', 'edd-sl-releases'),
+                    count($this->errors),
+                    $this->numberSuccessful
+                ));
             }
         }
     }
@@ -114,6 +112,8 @@ class MigrateReleases implements CliCommand
                     ));
                 }
             }
+
+            $this->numberSuccessful++;
         } catch (\Exception $e) {
             $this->errors[$productId] = $e->getMessage();
             \WP_CLI::warning($e->getMessage());
