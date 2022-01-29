@@ -39,7 +39,10 @@ class DownloadReleaseFile
             wp_die(__('You must be logged in to download this file.', 'edd-sl-releases'));
         }
 
-        if (! $this->productsRepository->hasActiveLicenseForProduct(get_current_user_id(), $data['product_id'])) {
+        if (
+            ! current_user_can('manage_options') &&
+            ! $this->productsRepository->hasActiveLicenseForProduct(get_current_user_id(), $data['product_id'])
+        ) {
             wp_die(__('You do not have an active license key for this product.', 'edd-sl-releases'));
         }
 
