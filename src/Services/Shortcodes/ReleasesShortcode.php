@@ -114,7 +114,8 @@ class ReleasesShortcode implements ShortcodeInterface
         }*/
 
         $this->viewLoader->loadView('releases-shortcode/releases.php', [
-            'releases' => $this->releaseRepository->listForProduct($this->getQueriedProductId())
+            'releases' => $this->releaseRepository->listForProduct($this->getQueriedProductId()),
+            'product'  => new \EDD_SL_Download($this->getQueriedProductId()),
         ]);
     }
 

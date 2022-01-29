@@ -7,6 +7,7 @@
  * @license   GPL2+
  *
  * @var \EddSlReleases\Models\Release[] $releases
+ * @var EDD_SL_Download $product
  */
 
 use EddSlReleases\ValueObjects;
@@ -15,6 +16,14 @@ $buttonColour = edd_get_option('checkout_color', 'blue');
 $buttonColour = ($buttonColour === 'inherit') ? '' : $buttonColour;
 
 ?>
+<h2 class="edd-sl-releases--product-header">
+    <?php
+    printf(
+        esc_html__('%s Releases', 'edd-sl-releases'),
+        esc_html($product->get_name())
+    );
+    ?>
+</h2>
 <p class="edd-sl-releases--back">
     <a href="<?php echo esc_url(remove_query_arg('edd-sl-product')); ?>">
         <?php echo '&laquo; '.esc_html__('Back to downloads', 'edd-sl-releases'); ?>
