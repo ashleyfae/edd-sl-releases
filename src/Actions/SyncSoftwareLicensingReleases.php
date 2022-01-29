@@ -114,13 +114,11 @@ class SyncSoftwareLicensingReleases
         }
 
         $existingFiles[$fileIndex] = [
-            [
-                'index'         => $fileIndex,
-                'name'          => $release->file_name,
-                'file'          => $release->getProtectedFileUrl(),
-                'condition'     => 'all',
-                'attachment_id' => $release->file_attachment_id,
-            ]
+            'index'         => $fileIndex,
+            'name'          => $release->file_name,
+            'file'          => $release->getProtectedFileUrl(),
+            'condition'     => 'all',
+            'attachment_id' => $release->file_attachment_id,
         ];
 
         update_post_meta($release->product_id, $metaKey, $existingFiles);

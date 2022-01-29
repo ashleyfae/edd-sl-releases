@@ -26,7 +26,7 @@ trait ValidatesReleaseData
             'released_at',
         ];
 
-        $missing = array_diff($required, array_flip($data));
+        $missing = array_diff($required, array_keys($data));
 
         if (! empty($missing)) {
             throw new \Exception(sprintf(
