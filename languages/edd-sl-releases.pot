@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the EDD Software Licensing Releases plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: EDD Software Licensing Releases 0.5\n"
+"Project-Id-Version: EDD Software Licensing Releases 1.0-alpha2\n"
 "Report-Msgid-Bugs-To: https://github.com/ashleyfae/edd-sl-releases/issues\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2022-01-28T12:48:44+00:00\n"
+"POT-Creation-Date: 2022-01-29T17:40:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.5.0\n"
 "X-Domain: edd-sl-releases\n"
@@ -55,31 +55,31 @@ msgstr ""
 msgid "Invalid release."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:31
+#: src/Actions/DownloadReleaseFile.php:32
 msgid "Missing product ID."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:35
+#: src/Actions/DownloadReleaseFile.php:36
 msgid "Missing version."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:39
+#: src/Actions/DownloadReleaseFile.php:40
 msgid "You must be logged in to download this file."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:43
+#: src/Actions/DownloadReleaseFile.php:47
 msgid "You do not have an active license key for this product."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:60
+#: src/Actions/DownloadReleaseFile.php:66
 msgid "No such release."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:63
+#: src/Actions/DownloadReleaseFile.php:69
 msgid "Failed to download file. Please contact customer support."
 msgstr ""
 
-#: src/Actions/DownloadReleaseFile.php:65
+#: src/Actions/DownloadReleaseFile.php:71
 msgid "An unexpected error occurred."
 msgstr ""
 
@@ -92,12 +92,16 @@ msgstr ""
 msgid "Licensing is not enabled for product #%d."
 msgstr ""
 
+#: src/Actions/Migrations/MigrateProduct.php:134
+msgid "Product #%d is a bundle."
+msgstr ""
+
 #. Translators: %s file key; %d ID of the product
-#: src/Actions/Migrations/MigrateProduct.php:135
+#: src/Actions/Migrations/MigrateProduct.php:142
 msgid "File key %s not found in files array for product #%d."
 msgstr ""
 
-#: src/Actions/Migrations/MigrateProduct.php:184
+#: src/Actions/Migrations/MigrateProduct.php:191
 msgid "No attachment ID in file. (Will attempt to create one in live run.)"
 msgstr ""
 
@@ -183,7 +187,7 @@ msgid "n/a"
 msgstr ""
 
 #: src/Services/AssetLoader.php:65
-#: views/admin/release.php:139
+#: views/admin/release.php:133
 msgid "Changelog"
 msgstr ""
 
@@ -243,7 +247,7 @@ msgid "Version"
 msgstr ""
 
 #: views/admin/release.php:56
-#: views/releases-shortcode/releases.php:38
+#: views/releases-shortcode/releases.php:47
 msgid "Pre Release"
 msgstr ""
 
@@ -263,24 +267,24 @@ msgstr ""
 msgid "Download URL"
 msgstr ""
 
-#: views/admin/release.php:128
+#: views/admin/release.php:122
 msgid "Change File"
 msgstr ""
 
-#: views/admin/release.php:129
+#: views/admin/release.php:123
 msgid "Upload File"
 msgstr ""
 
-#: views/admin/release.php:158
+#: views/admin/release.php:152
 msgid "Requirements"
 msgstr ""
 
 #. Translators: %s platform name
-#: views/admin/release.php:170
+#: views/admin/release.php:164
 msgid "%s Version Required:"
 msgstr ""
 
-#: views/admin/release.php:193
+#: views/admin/release.php:187
 msgid "Release Date"
 msgstr ""
 
@@ -289,19 +293,27 @@ msgstr ""
 msgid "Download version %s"
 msgstr ""
 
-#: views/releases-shortcode/products.php:47
+#: views/releases-shortcode/products.php:48
 msgid "Previous releases"
 msgstr ""
 
-#: views/releases-shortcode/releases.php:20
+#: views/releases-shortcode/products.php:57
+msgid "No downloads available."
+msgstr ""
+
+#: views/releases-shortcode/releases.php:22
+msgid "%s Releases"
+msgstr ""
+
+#: views/releases-shortcode/releases.php:29
 msgid "Back to downloads"
 msgstr ""
 
 #. Translators: %s date of the release
-#: views/releases-shortcode/releases.php:46
+#: views/releases-shortcode/releases.php:55
 msgid "Released on %s"
 msgstr ""
 
-#: views/releases-shortcode/releases.php:73
+#: views/releases-shortcode/releases.php:82
 msgid "Download"
 msgstr ""

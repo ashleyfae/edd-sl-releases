@@ -39,10 +39,11 @@ if ($products) {
                     echo esc_html(sprintf(__('Download version %s', 'edd-sl-releases'), $version));
                     ?>
                 </a>
+                <br>
 
                 <a
                     href="<?php echo esc_url(new ValueObjects\ProductReleasesUrl($product->ID)); ?>"
-                    class="edd-sl-releases-button--view-previous edd-submit button <?php echo esc_attr($buttonColour); ?>"
+                    class="edd-sl-releases-button--view-previous"
                 >
                     <?php esc_html_e('Previous releases', 'edd-sl-releases'); ?>
                 </a>
@@ -51,5 +52,9 @@ if ($products) {
         <?php
     }
 } else {
-
+    ?>
+    <p>
+        <?php esc_html_e('No downloads available.', 'edd-sl-releases'); ?>
+    </p>
+    <?php
 }
