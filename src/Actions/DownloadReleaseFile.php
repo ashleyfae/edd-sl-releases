@@ -20,7 +20,8 @@ class DownloadReleaseFile
 
     public function __construct(
         protected ReleaseRepository $releaseRepository,
-        protected PurchasedProductsRepository $productsRepository
+        protected PurchasedProductsRepository $productsRepository,
+        protected RecordReleaseDownload $recorder
     ) {
 
     }
@@ -52,6 +53,8 @@ class DownloadReleaseFile
                     intval($data['product_id']),
                     sanitize_text_field($data['version'])
                 );
+
+                $this->recorder->execute($release);
 
                 $this->processDownload($release);
             } catch (ModelNotFoundException $e) {
