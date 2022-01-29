@@ -50,7 +50,7 @@ class CreateRelease implements RestRoute
                             return $this->stripUnsafeCharacters(sanitize_text_field($param));
                         }
                     ],
-                    'file_url'     => [
+                    'git_asset_url' => [
                         'required'          => false,
                         'sanitize_callback' => function ($param, $request, $key) {
                             return esc_url_raw($param);

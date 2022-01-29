@@ -57,9 +57,9 @@ class CreateAndPublishRelease
             throw new \InvalidArgumentException('Missing required file_name argument.', 400);
         }
 
-        if (! empty($args['file_url'])) {
+        if (! empty($args['git_asset_url'])) {
             $preparedFile = $this->releaseFileProcessor->executeFromGitAsset(
-                $args['file_url'],
+                $args['git_asset_url'],
                 $args['file_name']
             );
         } elseif (! empty($_FILES['file_zip'])) {
@@ -77,7 +77,7 @@ class CreateAndPublishRelease
         } else {
             throw new \InvalidArgumentException(sprintf(
                 'You must provide one of the following parameters: %s',
-                json_encode(['file_url', 'file_zip', 'file_attachment_id', 'file_path'])
+                json_encode(['git_asset_url', 'file_zip', 'file_attachment_id', 'file_path'])
             ), 400);
         }
 

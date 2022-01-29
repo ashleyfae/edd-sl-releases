@@ -72,14 +72,14 @@ class PublishRelease implements CliCommand
             \WP_CLI::confirm(__('Is this asset correct?', 'edd-sl-releases'));
 
             $releaseArgs = [
-                'product_id'   => $product->ID,
-                'version'      => sanitize_text_field($release['tag_name']), // could also use 'name'
-                'file_url'     => $asset['url'],
-                'file_name'    => $asset['name'],
-                'changelog'    => wp_kses_post($release['body']),
-                'requirements' => null, // @todo
-                'pre_release'  => ! empty($release['prerelease']) ? 1 : 0,
-                'released_at'  => ! empty($release['published_at'])
+                'product_id'    => $product->ID,
+                'version'       => sanitize_text_field($release['tag_name']), // could also use 'name'
+                'git_asset_url' => $asset['url'],
+                'file_name'     => $asset['name'],
+                'changelog'     => wp_kses_post($release['body']),
+                'requirements'  => null, // @todo
+                'pre_release'   => ! empty($release['prerelease']) ? 1 : 0,
+                'released_at'   => ! empty($release['published_at'])
                     ? date('Y-m-d H:i:s', strtotime($release['published_at']))
                     : gmdate('Y-m-d H:i:s'),
             ];

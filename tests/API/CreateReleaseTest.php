@@ -68,7 +68,7 @@ class CreateReleaseTest extends ApiTestCase
      * @covers \EddSlReleases\API\v1\CreateRelease::restPermissionCheck
      * @covers \EddSlReleases\API\v1\CreateRelease::handle
      */
-    public function test_valid_args_with_file_url_creates_new_release()
+    public function test_valid_args_with_git_asset_url_creates_new_release()
     {
         wp_set_current_user(1);
 
@@ -77,10 +77,10 @@ class CreateReleaseTest extends ApiTestCase
             ->andReturn(new PreparedReleaseFile('/var/www/mysite.com/file.zip', 1));
 
         $response = $this->makeRestRequest($this->getApiEndpoint(), [
-            'version'      => '1.0',
-            'file_url'     => 'https://sample-url.com',
-            'file_name'    => 'sample-file.zip',
-            'requirements' => [
+            'version'       => '1.0',
+            'git_asset_url' => 'https://sample-url.com',
+            'file_name'     => 'sample-file.zip',
+            'requirements'  => [
                 'php' => '7.4',
             ]
         ]);
