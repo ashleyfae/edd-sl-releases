@@ -149,6 +149,8 @@ class CreateRelease implements RestRoute
 
             return new \WP_REST_Response($release->toArray(), 201);
         } catch (\Exception $e) {
+            edd_debug_log(sprintf('SL Releases - CreateRelease - API error: %s', $e->getMessage()));
+
             return new \WP_REST_Response(['error' => $e->getMessage()], $e->getCode() ? : 500);
         }
     }
