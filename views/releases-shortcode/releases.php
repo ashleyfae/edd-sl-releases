@@ -53,7 +53,7 @@ if ($releases) {
                             echo esc_html(sprintf(
                             /* Translators: %s date of the release */
                                 __('Released on %s', 'edd-sl-releases'),
-                                date(get_option('date_format'), strtotime($release->created_at))
+                                date(get_option('date_format'), strtotime($release->released_at))
                             ));
                             ?>
                         </div>
