@@ -9,8 +9,8 @@
 
 namespace EddSlReleases\Tests\Traits;
 
-use EddSlReleases\Tests\Helpers\Factories\ProductFactory;
-use EddSlReleases\Tests\Helpers\File;
+use EddSlReleases\Tests\Feature\Helpers\Factories\ProductFactory;
+use EddSlReleases\Tests\Feature\Helpers\File;
 
 trait InteractsWithProducts
 {

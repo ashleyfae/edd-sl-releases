@@ -7,9 +7,9 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Helpers\Factories;
+namespace EddSlReleases\Tests\Feature\Helpers\Factories;
 
-use EddSlReleases\Tests\Helpers\File;
+use EddSlReleases\Tests\Feature\Helpers\File;
 
 class FileFactory
 {

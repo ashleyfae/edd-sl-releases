@@ -7,12 +7,12 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\API;
+namespace EddSlReleases\Tests\Feature\API;
 
+use EddSlReleases\API\RestRoute;
 use EddSlReleases\Database\ReleasesTable;
 use EddSlReleases\Services\ReleaseFileProcessor;
-use EddSlReleases\API\RestRoute;
-use EddSlReleases\Tests\TestCase;
+use EddSlReleases\Tests\Feature\TestCase;
 use EddSlReleases\Tests\Traits\InteractsWithProducts;
 use Mockery\MockInterface;
 

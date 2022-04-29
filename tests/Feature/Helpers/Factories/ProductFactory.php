@@ -7,7 +7,7 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Helpers\Factories;
+namespace EddSlReleases\Tests\Feature\Helpers\Factories;
 
 class ProductFactory
 {

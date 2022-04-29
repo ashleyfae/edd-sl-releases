@@ -7,7 +7,7 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\API;
+namespace EddSlReleases\Tests\Feature\API;
 
 use EddSlReleases\Repositories\ReleaseRepository;
 use EddSlReleases\ValueObjects\PreparedReleaseFile;

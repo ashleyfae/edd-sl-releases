@@ -114,7 +114,8 @@ class SyncSoftwareLicensingReleases
         }
 
         $existingFiles[$fileIndex] = [
-            'index'         => $fileIndex,
+            // Use the same index as existing, if set. This value is weird and doesn't _actually_ match the index. :shrug:
+            'index'         => $existingFiles[$fileIndex]['index'] ?? $fileIndex,
             'name'          => $release->file_name,
             'file'          => $release->getProtectedFileUrl(),
             'condition'     => 'all',
