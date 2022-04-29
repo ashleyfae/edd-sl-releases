@@ -16,8 +16,8 @@ use EddSlReleases\Models\Release;
 
 class ReleaseRepository
 {
-    private ReleasesTable $releasesTable;
-    private \wpdb $wpdb;
+    protected ReleasesTable $releasesTable;
+    protected \wpdb $wpdb;
 
     public function __construct(ReleasesTable $releasesTable)
     {
@@ -110,7 +110,7 @@ class ReleaseRepository
      */
     public function insert(array $data): Release
     {
-        $data = wp_parse_args($data, [
+        $data = array_merge([
             'product_id'         => null,
             'version'            => null,
             'file_attachment_id' => null,
@@ -120,7 +120,7 @@ class ReleaseRepository
             'requirements'       => null,
             'pre_release'        => 0,
             'released_at'        => gmdate('Y-m-d H:i:s'),
-        ]);
+        ], $data);
 
         $formats = [
             'product_id'         => '%d',

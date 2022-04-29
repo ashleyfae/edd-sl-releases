@@ -7,19 +7,20 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Feature\Models;
+namespace EddSlReleases\Tests\Unit\Models;
 
 use EddSlReleases\Models\Release;
-use EddSlReleases\Tests\Feature\TestCase;
+use EddSlReleases\Tests\Unit\TestCase;
+use WP_Mock;
 
 class ReleaseTest extends TestCase
 {
 
     /**
-     * @covers \EddSlReleases\Traits\Serializable::toArray
-     * @covers \EddSlReleases\Traits\Serializable::toJson
+     * @covers \EddSlReleases\Traits\Serializable::toArray()
+     * @covers \EddSlReleases\Traits\Serializable::toJson()
      */
-    public function test_to_array_returns_public_properties()
+    public function testToJsonReturnsPublicProperties()
     {
         $args = [
             'id'                  => 1,
@@ -39,13 +40,25 @@ class ReleaseTest extends TestCase
 
         $release = new Release($args);
 
+        WP_Mock::userFunction('get_option')
+            ->with('date_format')
+            ->andReturn('F j, Y');
+
+        WP_Mock::userFunction('get_option')
+            ->with('time_format')
+            ->andReturn('g:i a');
+
+        WP_Mock::userFunction('current_user_can')
+            ->with('edit_products')
+            ->andReturn(false);
+
         $this->assertSame(json_encode($args), $release->toJson());
     }
 
     /**
-     * @covers \EddSlReleases\Traits\CastsAttributes::castAttribute
+     * @covers \EddSlReleases\Traits\CastsAttributes::castAttribute()
      */
-    public function test_integer_cast_to_boolean()
+    public function testIntegerCastTooBoolean()
     {
         $release = new Release(['pre_release' => 1]);
         $this->assertIsBool($release->pre_release);
@@ -53,18 +66,18 @@ class ReleaseTest extends TestCase
     }
 
     /**
-     * @covers \EddSlReleases\Traits\CastsAttributes::castAttribute
+     * @covers \EddSlReleases\Traits\CastsAttributes::castAttribute()
      */
-    public function test_string_cast_to_integer()
+    public function testStringCastToInteger()
     {
         $release = new Release(['product_id' => '123']);
         $this->assertSame(123, $release->product_id);
     }
 
     /**
-     * @covers \EddSlReleases\Traits\CastsAttributes::castAttribute
+     * @covers \EddSlReleases\Traits\CastsAttributes::castAttribute()
      */
-    public function test_json_cast_to_array()
+    public function testJsonCastToArray()
     {
         $requirements = [
             'php' => '7.4',
