@@ -7,16 +7,16 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Actions;
+namespace EddSlReleases\Tests\Feature\Actions;
 
 use EddSlReleases\Actions\Migrations\MigrateProduct;
 use EddSlReleases\Models\Release;
 use EddSlReleases\Repositories\ReleaseRepository;
-use EddSlReleases\Tests\Helpers\Factories\FileFactory;
-use EddSlReleases\Tests\Helpers\Factories\ProductFactory;
-use EddSlReleases\Tests\Helpers\Factories\ReleaseFactory;
-use EddSlReleases\Tests\Helpers\File;
-use EddSlReleases\Tests\TestCase;
+use EddSlReleases\Tests\Feature\Helpers\Factories\FileFactory;
+use EddSlReleases\Tests\Feature\Helpers\Factories\ProductFactory;
+use EddSlReleases\Tests\Feature\Helpers\Factories\ReleaseFactory;
+use EddSlReleases\Tests\Feature\Helpers\File;
+use EddSlReleases\Tests\Feature\TestCase;
 use EddSlReleases\Tests\Traits\InteractsWithProducts;
 
 /**

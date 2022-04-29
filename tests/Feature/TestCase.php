@@ -7,15 +7,18 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests;
+namespace EddSlReleases\Tests\Feature;
 
 use EddSlReleases\Database\ReleasesTable;
+use EddSlReleases\Tests\Traits\CanAccessInaccessible;
 
 /**
  * @mixin \PHPUnit\Framework\TestCase
  */
 abstract class TestCase extends \WP_UnitTestCase
 {
+    use CanAccessInaccessible;
+
     public function set_up()
     {
         wp_set_current_user(0);

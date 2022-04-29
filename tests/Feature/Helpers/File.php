@@ -7,7 +7,7 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Helpers;
+namespace EddSlReleases\Tests\Feature\Helpers;
 
 class File
 {

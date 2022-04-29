@@ -7,12 +7,11 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Database;
+namespace EddSlReleases\Tests\Feature\Database;
 
 use EddSlReleases\Models\Release;
 use EddSlReleases\Repositories\ReleaseRepository;
-use EddSlReleases\Tests\Helpers\Factories\ReleaseFactory;
-use EddSlReleases\Tests\TestCase;
+use EddSlReleases\Tests\Feature\TestCase;
 use EddSlReleases\Tests\Traits\InteractsWithProducts;
 
 /**

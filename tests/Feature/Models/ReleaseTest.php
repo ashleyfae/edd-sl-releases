@@ -7,10 +7,10 @@
  * @license   GPL2+
  */
 
-namespace EddSlReleases\Tests\Models;
+namespace EddSlReleases\Tests\Feature\Models;
 
 use EddSlReleases\Models\Release;
-use EddSlReleases\Tests\TestCase;
+use EddSlReleases\Tests\Feature\TestCase;
 
 class ReleaseTest extends TestCase
 {
