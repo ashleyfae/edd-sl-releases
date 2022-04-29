@@ -78,6 +78,7 @@ class CreateAndPublishRelease
      * @param  array  $args
      *
      * @return PreparedReleaseFile
+     * @throws ApiAuthorizationException|ApiException|FileProcessingException
      */
     protected function makePreparedFile(array $args): PreparedReleaseFile
     {
@@ -88,7 +89,7 @@ class CreateAndPublishRelease
         } elseif (! empty($args['file_attachment_id'])) {
             return $this->makeFromAttachmentId($args);
         } elseif (! empty($args['file_path'])) {
-            return new PreparedReleaseFile($args['file_path']);
+            return $this->makeFromFilePath($args);
         } else {
             throw new \InvalidArgumentException(sprintf(
                 'You must provide one of the following parameters: %s',
@@ -144,4 +145,15 @@ class CreateAndPublishRelease
         );
     }
 
+    /**
+     * Makes a prepared release file from a file path.
+     *
+     * @param  array  $args
+     *
+     * @return PreparedReleaseFile
+     */
+    protected function makeFromFilePath(array $args): PreparedReleaseFile
+    {
+        return new PreparedReleaseFile($args['file_path']);
+    }
 }
