@@ -7,9 +7,32 @@
  * @license   MIT
  */
 
-namespace EddSlReleases\Tests\Feature\Actions;
+namespace EddSlReleases\Tests\Unit\Actions;
 
-class CreateAndPublishReleaseTest
+use EddSlReleases\Actions\CreateAndPublishRelease;
+use EddSlReleases\Actions\SyncSoftwareLicensingReleases;
+use EddSlReleases\Repositories\ReleaseRepository;
+use EddSlReleases\Services\ReleaseFileProcessor;
+use EddSlReleases\Tests\Unit\TestCase;
+use Mockery;
+
+class CreateAndPublishReleaseTest extends TestCase
 {
+    /**
+     * @covers \EddSlReleases\Actions\CreateAndPublishRelease::withoutEvents()
+     */
+    public function testWithoutEvents()
+    {
+        $action = new CreateAndPublishRelease(
+            releaseFileProcessor: Mockery::mock(ReleaseFileProcessor::class),
+            releaseRepository: Mockery::mock(ReleaseRepository::class),
+            productSyncer: Mockery::mock(SyncSoftwareLicensingReleases::class)
+        );
 
+        $this->assertTrue($this->getInaccessibleProperty($action, 'withEvents')->getValue($action));
+
+        $action->withoutEvents();
+
+        $this->assertFalse($this->getInaccessibleProperty($action, 'withEvents')->getValue($action));
+    }
 }
