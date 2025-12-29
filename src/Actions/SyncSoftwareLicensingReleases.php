@@ -81,7 +81,6 @@ class SyncSoftwareLicensingReleases
 
         update_post_meta($release->product_id, $enabledKey, true);
         update_post_meta($release->product_id, $versionKey, $release->version);
-        update_post_meta($release->product_id, $fileKey, 0);
 
         if ($release->changelog) {
             update_post_meta($release->product_id, $changelogKey, $release->changelog);
@@ -105,12 +104,18 @@ class SyncSoftwareLicensingReleases
      */
     protected function updateProductDownloads(Release $release, \EDD_SL_Download $product): void
     {
+        edd_debug_log(sprintf('Updating product downloads. Product ID: %d; Release ID: %d; Pre-release: %d', $product->get_ID(), $release->id, (int) $release->pre_release));
+
         $metaKey       = $release->pre_release ? '_edd_sl_beta_files' : 'edd_download_files';
         $existingFiles = $release->pre_release ? $product->get_beta_files() : $product->get_files();
         $fileIndex     = $release->pre_release ? $product->get_beta_upgrade_file_key() : $product->get_upgrade_file_key();
 
+        edd_debug_log(sprintf('-- Existing files: %s', var_export($existingFiles, true)));
+        edd_debug_log(sprintf('-- File upgrade key: %s', var_export($fileIndex, true)));
+
         if ($fileIndex === false || ! array_key_exists($fileIndex, $existingFiles)) {
             $fileIndex = count($existingFiles) ? max(array_keys($existingFiles)) + 1 : 0;
+            edd_debug_log(sprintf('-- Modified file upgrade key to: %s', var_export($fileIndex, true)));
         }
 
         $existingFiles[$fileIndex] = [
@@ -122,7 +127,13 @@ class SyncSoftwareLicensingReleases
             'attachment_id' => $release->file_attachment_id,
         ];
 
+        edd_debug_log(sprintf('-- New modified files: %s', var_export($existingFiles, true)));
+
         update_post_meta($release->product_id, $metaKey, $existingFiles);
+
+        // Update the upgrade file key to point to the correct index
+        $fileKeyMeta = $release->pre_release ? '_edd_sl_beta_upgrade_file_key' : '_edd_sl_upgrade_file_key';
+        update_post_meta($release->product_id, $fileKeyMeta, $fileIndex);
     }
 
 }
