@@ -54,7 +54,7 @@ class GitHubApi
         ];
 
         if (! in_array(wp_remote_retrieve_header($response, 'content-type'), $validContentTypes, true)) {
-            throw new ApiException('Invalid content type: '.wp_remote_retrieve_header($response, 'content-type'));
+            throw new ApiException('Invalid content type from GitHub: '.wp_remote_retrieve_header($response, 'content-type'));
         }
 
         return wp_remote_retrieve_body($response);
