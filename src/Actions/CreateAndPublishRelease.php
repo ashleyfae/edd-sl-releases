@@ -9,6 +9,8 @@
 
 namespace EddSlReleases\Actions;
 
+use EddSlReleases\Exceptions\ApiAuthorizationException;
+use EddSlReleases\Exceptions\ApiException;
 use EddSlReleases\Exceptions\FileProcessingException;
 use EddSlReleases\Exceptions\ModelNotFoundException;
 use EddSlReleases\Models\Release;
@@ -57,32 +59,10 @@ class CreateAndPublishRelease
             throw new \InvalidArgumentException('Missing required file_name argument.', 400);
         }
 
-        if (! empty($args['git_asset_url'])) {
-            $preparedFile = $this->releaseFileProcessor->executeFromGitAsset(
-                $args['git_asset_url'],
-                $args['file_name']
-            );
-        } elseif (! empty($_FILES['file_zip'])) {
-            $preparedFile = $this->releaseFileProcessor->executeFromUploadedFile(
-                'file_zip',
-                $args['file_name']
-            );
-        } elseif (! empty($args['file_attachment_id'])) {
-            $preparedFile = new PreparedReleaseFile(
-                get_attached_file($args['file_attachment_id']),
-                $args['file_attachment_id']
-            );
-        } elseif (! empty($args['file_path'])) {
-            $preparedFile = new PreparedReleaseFile($args['file_path']);
-        } else {
-            throw new \InvalidArgumentException(sprintf(
-                'You must provide one of the following parameters: %s',
-                json_encode(['git_asset_url', 'file_zip', 'file_attachment_id', 'file_path'])
-            ), 400);
-        }
+        $preparedFile = $this->makePreparedFile($args);
 
         $newRelease = $this->releaseRepository->insert(
-            wp_parse_args($preparedFile->toArray(), $args)
+            array_merge($args, $preparedFile->toArray())
         );
 
         if ($this->withEvents) {
@@ -92,4 +72,88 @@ class CreateAndPublishRelease
         return $newRelease;
     }
 
+    /**
+     * Makes a prepared release file from teh supplied arguments.
+     *
+     * @param  array  $args
+     *
+     * @return PreparedReleaseFile
+     * @throws ApiAuthorizationException|ApiException|FileProcessingException
+     */
+    protected function makePreparedFile(array $args): PreparedReleaseFile
+    {
+        if (! empty($args['git_asset_url'])) {
+            return $this->makeFromGitAssetUrl($args);
+        } elseif (! empty($_FILES['file_zip'])) {
+            return $this->makeFromZipFile($args);
+        } elseif (! empty($args['file_attachment_id'])) {
+            return $this->makeFromAttachmentId($args);
+        } elseif (! empty($args['file_path'])) {
+            return $this->makeFromFilePath($args);
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'You must provide one of the following parameters: %s',
+                json_encode(['git_asset_url', 'file_zip', 'file_attachment_id', 'file_path'])
+            ), 400);
+        }
+    }
+
+    /**
+     * Makes a prepared release file from a Git URL.
+     *
+     * @param  array  $args
+     *
+     * @return PreparedReleaseFile
+     * @throws FileProcessingException|ApiAuthorizationException|ApiException
+     */
+    protected function makeFromGitAssetUrl(array $args): PreparedReleaseFile
+    {
+        return $this->releaseFileProcessor->executeFromGitAsset(
+            $args['git_asset_url'],
+            $args['file_name']
+        );
+    }
+
+    /**
+     * Makes a prepared release file from a zip file.
+     *
+     * @param  array  $args
+     *
+     * @return PreparedReleaseFile
+     * @throws FileProcessingException
+     */
+    protected function makeFromZipFile(array $args): PreparedReleaseFile
+    {
+        return $this->releaseFileProcessor->executeFromUploadedFile(
+            'file_zip',
+            $args['file_name']
+        );
+    }
+
+    /**
+     * Makes a prepared release file from an attachment ID.
+     *
+     * @param  array  $args
+     *
+     * @return PreparedReleaseFile
+     */
+    protected function makeFromAttachmentId(array $args): PreparedReleaseFile
+    {
+        return new PreparedReleaseFile(
+            get_attached_file($args['file_attachment_id']),
+            $args['file_attachment_id']
+        );
+    }
+
+    /**
+     * Makes a prepared release file from a file path.
+     *
+     * @param  array  $args
+     *
+     * @return PreparedReleaseFile
+     */
+    protected function makeFromFilePath(array $args): PreparedReleaseFile
+    {
+        return new PreparedReleaseFile($args['file_path']);
+    }
 }

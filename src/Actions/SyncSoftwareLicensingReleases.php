@@ -104,7 +104,12 @@ class SyncSoftwareLicensingReleases
      */
     protected function updateProductDownloads(Release $release, \EDD_SL_Download $product): void
     {
-        edd_debug_log(sprintf('Updating product downloads. Product ID: %d; Release ID: %d; Pre-release: %d', $product->get_ID(), $release->id, (int) $release->pre_release));
+        edd_debug_log(sprintf(
+            'Updating product downloads. Product ID: %d; Release ID: %d; Pre-release: %d',
+            $product->get_ID(),
+            $release->id,
+            (int) $release->pre_release)
+        );
 
         $metaKey       = $release->pre_release ? '_edd_sl_beta_files' : 'edd_download_files';
         $existingFiles = $release->pre_release ? $product->get_beta_files() : $product->get_files();
