@@ -58,8 +58,8 @@ abstract class TestCase extends \WP_Mock\Tools\TestCase
             throw new Exception('Patchwork is not loaded! Please load patchwork before mocking static methods!');
         }
 
-        $safe_method = "wp_mock_safe_${method}";
-        $signature   = md5("${class}::${method}");
+        $safe_method = "wp_mock_safe_{$method}";
+        $signature   = md5("{$class}::{$method}");
 
         if (! empty($this->mockedStaticMethods[$signature])) {
             $mock = $this->mockedStaticMethods[$signature];
@@ -85,7 +85,7 @@ abstract class TestCase extends \WP_Mock\Tools\TestCase
             $mock->shouldAllowMockingProtectedMethods();
             $this->mockedStaticMethods[$signature] = $mock;
 
-            \Patchwork\redefine("${class}::${method}", function () use ($mock, $safe_method) {
+            \Patchwork\redefine("{$class}::{$method}", function () use ($mock, $safe_method) {
                 return call_user_func_array([$mock, $safe_method], func_get_args());
             });
         }
