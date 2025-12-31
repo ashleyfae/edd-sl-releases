@@ -44,6 +44,8 @@ class GitHubApi
      */
     public function fetchAsset(string $assetUrl): string
     {
+        edd_debug_log(sprintf('Fetching GitHub asset: %s', $assetUrl));
+
         $response = $this->makeRequest($assetUrl, [
             'Accept' => 'application/octet-stream',
         ]);
@@ -54,7 +56,12 @@ class GitHubApi
         ];
 
         if (! in_array(wp_remote_retrieve_header($response, 'content-type'), $validContentTypes, true)) {
-            throw new ApiException('Invalid content type: '.wp_remote_retrieve_header($response, 'content-type'));
+            throw new ApiException(sprintf(
+                'Invalid content type from GitHub: %s; HTTP Status: %d; Body: %s',
+                wp_remote_retrieve_header($response, 'content-type'),
+                wp_remote_retrieve_response_code($response),
+                wp_remote_retrieve_body($response)
+            ));
         }
 
         return wp_remote_retrieve_body($response);

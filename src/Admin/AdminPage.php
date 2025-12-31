@@ -57,6 +57,15 @@ class AdminPage
             $release = new Release();
             if (! empty($_GET['product'])) {
                 $release->product_id = absint($_GET['product']);
+
+                try {
+                    // copy requirements from previous release, as requirements are unlikely to go _down_ and it's nice
+                    // to have them as a reference
+                    $previousRelease = $this->releaseRepository->getLatestStableRelease($release->product_id);
+                    $release->requirements = $previousRelease->requirements;
+                } catch(\Exception $e) {
+                    // do nothing
+                }
             } else {
                 wp_die(__('Undefined product.', 'edd-sl-releases'));
             }
