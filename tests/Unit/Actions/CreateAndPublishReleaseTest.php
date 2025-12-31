@@ -63,9 +63,9 @@ class CreateAndPublishReleaseTest extends TestCase
             ->times($withEvents && ! $expectedException ? 1 : 0)
             ->with(5);
 
-        $this->setInaccessibleProperty($action, 'releaseRepository', $repo);
-        $this->setInaccessibleProperty($action, 'withEvents', $withEvents);
-        $this->setInaccessibleProperty($action, 'productSyncer', $syncer);
+        $this->setInaccessiblePropertyValue($action, 'releaseRepository', $repo);
+        $this->setInaccessiblePropertyValue($action, 'withEvents', $withEvents);
+        $this->setInaccessiblePropertyValue($action, 'productSyncer', $syncer);
 
         $this->assertSame($release, $action->execute($args));
     }

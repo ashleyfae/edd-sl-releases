@@ -19,8 +19,8 @@
     "ext-json": "*"
   },
   "require-dev": {
-    "mockery/mockery": "^1.5.0",
+    "mockery/mockery": "^1.6.0",
     "phpunit/phpunit": "^9.6.0",
-    "10up/wp_mock": "^0.4.2"
+    "10up/wp_mock": "^1.1.0"
   }
 }
